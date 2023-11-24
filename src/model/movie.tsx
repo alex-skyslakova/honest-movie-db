@@ -14,6 +14,5 @@ export type Movie = {
 	description: string;
     image: HTMLImageElement;
     rating: number;
-    topReview: Review[];
     reviews: Review[];
 }
