@@ -3,6 +3,8 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import {Navbar} from "@/components/Navbar";
 
+import { Providers } from './Providers';
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -19,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Navbar/>
-        {children}
+        <Providers>{children}</Providers>
         <footer className="py-2 px-4 text-right dark:bg-stone-600">React project 2023</footer>
       </body>
     </html>
