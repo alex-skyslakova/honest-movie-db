@@ -57,7 +57,7 @@ const deleteBadge = async (badgeId: number) => {
 }
 
 
-export const GET = async (req: Request) => {
+export const GET_BADGE = async (req: Request) => {
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get('userId');
     const badgeId = searchParams.get('badgeId');
@@ -71,7 +71,7 @@ export const GET = async (req: Request) => {
     }
 }
 
-export const POST = async (req: Request) => {
+export const POST_BADGE = async (req: Request) => {
     const { searchParams } = new URL(req.url);
     const badge = {
         name: searchParams.get('badgeName') ?? 'New Badge',
@@ -81,7 +81,7 @@ export const POST = async (req: Request) => {
     return createBadge(badge);
 }
 
-export const PUT = async (req: Request) => {
+export const PUT_BADGE = async (req: Request) => {
     const { searchParams } = new URL(req.url);
     const badgeId = Number(searchParams.get('badgeId'));
     const originalBadge = await getBadgeById(badgeId);
@@ -104,7 +104,7 @@ export const PUT = async (req: Request) => {
     return updated
 }
 
-export const DELETE = async (req: Request) => {
+export const DELETE_BADGE = async (req: Request) => {
     const badgeId = Number(new URL(req.url).searchParams.get('badgeId'));
     const originalBadge = await getBadgeById(badgeId);
     if (!originalBadge) {
