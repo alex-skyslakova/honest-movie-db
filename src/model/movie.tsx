@@ -12,7 +12,7 @@ export type Movie = {
 	title: string;
     genre: Genre[];
 	description: string;
-    image: HTMLImageElement;
+    image: string;
     rating: number;
     reviews: Review[];
 }

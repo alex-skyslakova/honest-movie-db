@@ -1,0 +1,140 @@
+{
+    "badges": [
+        {
+        "id": 1,
+        "name": "Bronze",
+        "image": "src/img/badges/bronze-medal.png"
+        },
+        {
+        "id": 2,
+        "name": "Silver",
+        "image": "src/img/badges/silver-medal.png"
+        },
+        {
+        "id": 3,
+        "name": "Gold",
+        "image": "src/img/badges/gold-medal.png"
+        },
+        {
+        "id": 4,
+        "name": "Negative",
+        "image": "src/img/badges/negative-vote.png"
+        },
+        {
+        "id": 5,
+        "name": "Positive",
+        "image": "src/img/badges/positive-vote.png"
+        }
+    ],
+    "movies": [
+        {
+          "id": 1,
+          "title": "Pirates of the Caribbean: Dead Man's Chest",
+          "genre": [
+            { "id": 1, "name": "Action" },
+            { "id": 2, "name": "Adventure" },
+            { "id": 4, "name": "Fantasy" },
+            { "id": 5, "name": "Comedy" }
+          ],
+          "description": "Blacksmith Will Turner teams up with eccentric pirate \"Captain\" Jack Sparrow to save his love, the governor's daughter, from Jack's former pirate allies, who are now undead.",
+          "image": "src/img/movies/pirates-of-the-caribbean.png",
+          "rating": 0,
+          "reviews": []
+        },
+        {
+          "id": 2,
+          "title": "The Lord of the Rings: The Fellowship of the Ring",
+          "genre": [
+            { "id": 1, "name": "Action" },
+            { "id": 2, "name": "Adventure" },
+            { "id": 4, "name": "Fantasy" }
+          ],
+          "description": "A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.",
+          "image": "src/img/movies/lord-of-the-rings.png",
+          "rating": 0,
+          "reviews": []
+        },
+        {
+          "id": 3,
+          "title": "Pride & Prejudice",
+          "genre": [
+            { "id": 15, "name": "Romance" },
+            { "id": 3, "name": "Drama" }
+          ],
+          "description": "Sparks fly when spirited Elizabeth Bennet meets single, rich, and proud Mr. Darcy. But Mr. Darcy reluctantly finds himself falling in love with a woman beneath his class. Can each overcome their own pride and prejudice?",
+          "image": "src/img/movies/pride-and-prejudice.png",
+          "rating": 0,
+          "reviews": []
+        },
+        {
+          "id": 4,
+          "title": "The Silence of the Lambs",
+          "genre": [
+            { "id": 6, "name": "Thriller" },
+            { "id": 7, "name": "Horror" },
+            { "id": 3, "name": "Drama" },
+            { "id": 11, "name": "Crime" }
+          ],
+          "description": "A young F.B.I. cadet must receive the help of an incarcerated and manipulative cannibal killer to help catch another serial killer, a madman who skins his victims.",
+          "image": "src/img/movies/silence-of-the-lambs.png",
+          "rating": 0,
+          "reviews": []
+        },
+        {
+          "id": 5,
+          "title": "Death Note",
+          "genre": [
+            { "id": 2, "name": "Adventure" },
+            { "id": 9, "name": "Mystery" },
+            { "id": 10, "name": "Animation" },
+            { "id": 11, "name": "Crime" }
+          ],
+          "description": "An intelligent high school student goes on a secret crusade to eliminate criminals from the world after discovering a notebook capable of killing anyone whose name is written into it.",
+          "image": "src/img/movies/death-note.png",
+          "rating": 0,
+          "reviews": []
+        },
+        {
+          "id": 6,
+          "title": "Hot Shots!",
+          "genre": [
+            { "id": 8, "name": "Parody" },
+            { "id": 1, "name": "Action" },
+            { "id": 2, "name": "Adventure" },
+            { "id": 13, "name": "War" }
+          ],
+          "description": "A parody of Top Gun (1986) in which a talented but unstable fighter pilot must overcome the ghosts of his father and save a mission sabotaged by greedy weapons manufacturers.",
+          "image": "src/img/movies/hot-shots.png",
+          "rating": 0,
+          "reviews": []
+        },
+        {
+          "id": 7,
+          "title": "Band of Brothers",
+          "genre": [
+            { "id": 3, "name": "Drama" },
+            { "id": 12, "name": "History" },
+            { "id": 13, "name": "War" }
+          ],
+          "description": "The story of Easy Company of the U.S. Army 101st Airborne Division and their mission in World War II Europe, from Operation Overlord to V-J Day.",
+          "image": "src/img/movies/band-of-brothers.png",
+          "rating": 0,
+          "reviews": []
+        },
+        {
+          "id": 8,
+          "title": "The Phantom of the Opera",
+          "genre": [
+            { "id": 14, "name": "Musical" },
+            { "id": 3, "name": "Romantic" },
+            { "id": 2, "name": "Drama" }
+          ],
+          "description": "A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic.",
+          "image": "src/img/movies/phantom-of-the-opera.png",
+          "rating": 0,
+          "reviews": []
+        }
+      ]
+      
+}
+  
