@@ -3,5 +3,5 @@
 export type Badge = {
     id: number;
     name: string;
-    image: HTMLImageElement;
+    image: string;
 }
