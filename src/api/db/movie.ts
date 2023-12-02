@@ -20,7 +20,7 @@ export const getMovies = async (movieParams: movieParams) => {
 
     return prisma.movie.findMany({
         where: {
-            OR: [
+            AND: [
                 {
                     title: {
                         startsWith: movieParams.namePrefix,
