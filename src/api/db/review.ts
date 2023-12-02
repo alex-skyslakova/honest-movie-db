@@ -48,6 +48,10 @@ export const deleteReview = async (reviewId: number) => {
     });
 }
 
+export const isValidReviewId = async (reviewId: number) => {
+    return await getReviewById(reviewId) !== null;
+}
+
 export const GET_REVIEW = async (req: Request) => {
     const {searchParams} = new URL(req.url);
     const reviewId = searchParams.get('reviewId');
