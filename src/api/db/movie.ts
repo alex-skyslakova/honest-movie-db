@@ -1,8 +1,11 @@
 import {prisma} from "@/api/db/client";
 import {Movie} from ".prisma/client";
 
-export const getMovies = async () => {
-    return prisma.movie.findMany();
+export const getMovies = async (skip: number, take: number) => {
+    return prisma.movie.findMany({
+        skip: skip,
+        take: take,
+    });
 };
 
 export const getMovieById = async (movieId: number) => {
