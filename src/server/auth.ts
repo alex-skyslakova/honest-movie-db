@@ -1,3 +1,4 @@
+import { prisma } from '@/api/db/client';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import {
   getServerSession,
@@ -6,7 +7,6 @@ import {
 } from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
 
-import { db } from '@/server/db';
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -37,7 +37,7 @@ export const authOptions: NextAuthOptions = {
       }
     })
   },
-  adapter: PrismaAdapter(db),
+  adapter: PrismaAdapter(prisma),
   providers: [
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID ?? '',
