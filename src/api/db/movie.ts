@@ -8,7 +8,7 @@ import MovieUncheckedCreateInput = Prisma.MovieUncheckedCreateInput;
 type movieParams = {
     genreId?: number,
     namePrefix?: string,
-    rating?: number,
+    minRating?: number,
     page: number,
     pageSize: number
 }
@@ -37,7 +37,7 @@ export const getMovies = async (movieParams: movieParams) => {
                 },
                 {
                     rating: {
-                        gte: movieParams.rating,
+                        gte: movieParams.minRating,
                     }
                 }
             ],
@@ -79,7 +79,7 @@ export const deleteMovie = async (movieId: number) => {
 export const GET_MOVIE = async (req: Request) => {
     const {searchParams} = new URL(req.url);
     const id = searchParams.get('movieId');
-    const page = parseInt(searchParams.get('page') ?? '') ?? 0;
+    const page = parseInt(searchParams.get('page') ?? '') ?? 1;
     const pageSize = parseInt(searchParams.get('pageSize') ?? '') ?? 10;
     if (id) {
         return Response.json(getMovieById(parseInt(id)));
@@ -101,7 +101,7 @@ export const GET_MOVIE = async (req: Request) => {
         params.namePrefix = filterByName;
     }
     if (filterByRating) {
-        params.rating = parseInt(filterByRating);
+        params.minRating = parseInt(filterByRating);
     }
 
     return Response.json(getMovies(params));
@@ -110,16 +110,17 @@ export const GET_MOVIE = async (req: Request) => {
 export const POST_MOVIE = async (req: Request) => {
     const {searchParams} = new URL(req.url);
     // expects that genre ids are saved as comma separated string
-    const genreList = searchParams.get('movieGenreIdList')?.split(",");
-    if (genreList) {
-        genreList.map((genreId) => parseInt(genreId));
-    }
+    const genreList = searchParams
+        .get('movieGenreIdList')
+        ?.split(",")
+        .map((genreId) => ({id: parseInt(genreId)}));
+
     const movie = {
         title: searchParams.get('movieTitle') ?? 'New Movie',
         description: searchParams.get('movieDescription') ?? '',
         image: searchParams.get('movieImage') ?? '',
         rating: 0,
-        genres: genreList?.map(id => ({id: id }) || []),
+        genres: genreList !== null ? genreList : [],
     } as MovieUncheckedCreateInput;
 
     return Response.json(createMovie(movie));

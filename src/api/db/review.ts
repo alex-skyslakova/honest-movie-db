@@ -57,7 +57,7 @@ export const GET_REVIEW = async (req: Request) => {
     const reviewId = searchParams.get('reviewId');
     const userId = searchParams.get('userId');
     const movieId = searchParams.get('movieId');
-    const page = parseInt(searchParams.get('page') ?? '') ?? 0;
+    const page = parseInt(searchParams.get('page') ?? '') ?? 1;
     const pageSize = parseInt(searchParams.get('pageSize') ?? '') ?? 10;
 
     if (reviewId) {
