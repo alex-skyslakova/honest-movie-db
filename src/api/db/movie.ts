@@ -120,7 +120,7 @@ export const POST_MOVIE = async (req: Request) => {
         description: searchParams.get('movieDescription') ?? '',
         image: searchParams.get('movieImage') ?? '',
         rating: 0,
-        genres: genreList !== null ? genreList : [],
+        genres: genreList ?? [],
     } as MovieUncheckedCreateInput;
 
     return Response.json(createMovie(movie));
