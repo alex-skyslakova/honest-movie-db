@@ -1,0 +1,60 @@
+datasource db {
+  provider = "sqlite" // or another database provider like MySQL, SQLite, etc.
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Badge {
+  id     Int    @id @default(autoincrement())
+  name   String
+  image  String  // Storing image URL or path as string
+  users   User[]  @relation("UserBadges")
+}
+
+model Genre {
+  id     Int     @id @default(autoincrement())
+  name   String
+  movie  Movie[] @relation("MovieGenres")
+}
+
+model Movie {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  image       String?    // Storing image URL or path as string
+  rating      Float
+  reviews     Review[]
+  genres      Genre[]   @relation("MovieGenres")
+}
+
+model Review {
+  id        Int    @id @default(autoincrement())
+  content   String
+  rating    Int    // Assuming 0-100 integer rating
+  user      User   @relation(fields: [userId], references: [id])
+  userId    Int
+  movie     Movie  @relation(fields: [movieId], references: [id])
+  movieId   Int
+  votes     Vote[]
+}
+
+model Vote {
+  id       Int    @id @default(autoincrement())
+  userId   Int
+  user     User   @relation(fields: [userId], references: [id])
+  reviewId Int
+  review   Review @relation(fields: [reviewId], references: [id])
+  isLike   Boolean // True for like, false for dislike
+}
+
+model User {
+  id             Int      @id @default(autoincrement())
+  name           String
+  profilePicture String?  // Storing image URL or path as string
+  badges         Badge[]  @relation("UserBadges")
+  reviews        Review[]
+  votes          Vote[]
+}
