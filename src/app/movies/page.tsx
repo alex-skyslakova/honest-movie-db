@@ -12,7 +12,7 @@ export default async function Movies() {
 
 async function getMovies(opts: MovieOptions): Promise<Movie[]> {
     'use server'
-    const file = await new Promise<string>(resolve => fs.readFile('/Users/kristianmalak/IdeaProjects/honest-movie-db/data.json', (err, data) => resolve(data?.toString() || '')))
+    const file = await new Promise<string>(resolve => fs.readFile('data.json', (err, data) => resolve(data?.toString() || '')))
     const json = JSON.parse(file)
     return (json?.movies ?? []) as Movie[]
 }
