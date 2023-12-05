@@ -3,7 +3,7 @@
 export default function error() {
     return (
         <div className="flex h-screen justify-center p-10">
-            Some error occurred, sorry
+            Unknown error occurred, please reload the page or try again later
         </div>
     )
 }
