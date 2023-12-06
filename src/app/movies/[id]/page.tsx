@@ -79,6 +79,9 @@ type MoviePageParams = {
 const MoviePage = ({ params }: MoviePageParams) => {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [isDialogOpen, setDialogOpen] = useState(false);
+  const [content, setContent] = useState(''); // Track content in state
+  const [rating, setRating] = useState(0)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -95,6 +98,36 @@ const MoviePage = ({ params }: MoviePageParams) => {
 
     fetchData();
   }, [params.id]);
+
+  const openDialog = () => {
+    setDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setDialogOpen(false);
+    // Clear form fields when closing the dialog
+    setContent('');
+    setRating(0);
+  };
+
+  const addReview = () => {
+    // Handle form submission logic (e.g., send data to API)
+    const newReview: Review = {
+      id: reviews.length + 1,
+      userId: 1, // You may need to get the actual user ID
+      content: content, // Use the value from the content state
+      rating: rating, // Use the value from the rating state
+      movieId: params.id,
+      likes: 0,
+      dislikes: 0,
+    };
+    setReviews([...reviews, newReview]);
+    closeDialog();
+
+    // Log content and rating to console
+    console.log('Content:', content);
+    console.log('Rating:', rating);
+  };
 
   return (
     <div className="container mx-auto my-8 p-8 bg-gray-800 shadow-md rounded-md overflow-y-auto">
@@ -119,24 +152,95 @@ const MoviePage = ({ params }: MoviePageParams) => {
             </div>
 
             {/* Rating */}
-          <div className="flex-shrink-0">
-            <p className="text-3xl mb-8">
-              Rating: <Rating value={movie.rating} />
-            </p>
-          </div>
+            <div className="flex-shrink-0">
+              <p className="text-3xl mb-8">
+                Rating: <Rating value={movie.rating} />
+              </p>
+            </div>
           </div>
         </div>
       )}
 
       {/* Reviews Section */}
-      {reviews.length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">Movie Reviews</h2>
-          {reviews.map((review) => (
-            <MovieReview key={review.id} review={review} />
-          ))}
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-4">Movie Reviews</h2>
+
+        {/* Add Review Button */}
+        <div className="mt-4">
+          <button
+            className="bg-blue-500 text-white py-2 px-4 rounded"
+            onClick={openDialog}
+          >
+            Add Review
+          </button>
+        </div>
+
+       {/* Add Review Dialog */}
+      {isDialogOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+          <div className="bg-white p-4 w-96 rounded-md text-black">
+            <h2 className="text-2xl font-bold mb-4">Add a Review</h2>
+            {/* Review Form */}
+            <form>
+              {/* Content */}
+              <div className="mb-4">
+                <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+                  Content
+                </label>
+                <textarea
+                  id="content"
+                  name="content"
+                  rows={4}
+                  className="mt-1 p-2 w-full border rounded-md"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)} // Update content state
+                />
+              </div>
+
+              {/* Rating Slider */}
+              <div className="mb-4">
+                <label htmlFor="rating" className="block text-sm font-medium text-gray-700">
+                  Rating
+                </label>
+                <input
+                  type="range"
+                  id="rating"
+                  name="rating"
+                  min="0"
+                  max="100"
+                  className="mt-1 w-full"
+                  value={rating}
+                  onChange={(e) => setRating(Number(e.target.value))} // Update rating state
+                />
+              </div>
+
+              {/* Submit Button */}
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  className="bg-blue-500 text-white py-2 px-4 rounded"
+                  onClick={closeDialog}
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  className="ml-2 bg-green-500 text-white py-2 px-4 rounded"
+                  onClick={addReview}
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
+
+        {/* Display Reviews */}
+        {reviews.map((review) => (
+          <MovieReview key={review.id} review={review} />
+        ))}
+      </div>
     </div>
   );
 };

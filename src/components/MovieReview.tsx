@@ -38,7 +38,7 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review }) => {
       </div>
 
       {/* Rating (moved to the bottom left) */}
-      <p className="absolute bottom-2 left-2 text-lg font-bold ml-2">
+      <p className="absolute bottom-2 left-2 text-xl font-bold ml-2">
         Rating: <Rating value={review.rating} />
       </p>
 
@@ -52,7 +52,7 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review }) => {
             <img
               src="/img/icons/like.png"
               alt="Like"
-              className="w-4 h-4"
+              className="w-6 h-6"
             />
           </button>
           <button
@@ -62,7 +62,7 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review }) => {
             <img
               src="/img/icons/dislike.png"
               alt="Dislike"
-              className="w-4 h-4"
+              className="w-6 h-6"
             />
           </button>
         </div>
