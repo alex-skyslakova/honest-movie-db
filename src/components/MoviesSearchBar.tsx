@@ -33,7 +33,7 @@ export const MoviesSearchBar = () => {
             <div className="rounded-xl bg-gray-200 dark:bg-stone-700 flex items-center gap-x-2 px-4">
                 <label htmlFor="selectPageSize">Movies per page:</label>
                 <select id="selectPageSize" className="bg-gray-200 dark:bg-stone-700" value={options.pageSize} onChange={event => {
-                    setOptions(Object.assign({}, options, {pageSize: event.target.value}))
+                    setOptions(Object.assign({}, options, {pageSize: event.target.value, pageNumber: 0}))
                 }}>
                     <option value={10}>10</option>
                     <option value={20}>20</option>
