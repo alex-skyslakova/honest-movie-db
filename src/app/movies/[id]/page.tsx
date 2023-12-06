@@ -2,7 +2,7 @@
 
 // src/app/movies/[id]/page.tsx
 import MovieReview from '@/components/MovieReview';
-import Rating from '@/components/Rating';
+import RatingMovie from '@/components/RatingMovie';
 import { useState, useEffect } from 'react';
 
 // Placeholder data
@@ -11,48 +11,48 @@ const dummyMovie: Movie = {
   title: 'Dummy Movie',
   description: 'This is a dummy movie for testing purposes. This is a dummy movie for testing purposes. This is a dummy movie for testing purposes. This is a dummy movie for testing purposes.This is a dummy movie for testing purposes.',
   image: 'band-of-brothers.png',
-  rating: 85,
+  rating: 60,
 };
 
-const dummyReviews: Review[] = [
-  {
-    id: 101,
-    userId: 1,
-    content: 'Great movie! Loved it!',
-    rating: 80,
-    movieId: 1,
-    likes: 10,
-    dislikes: 10,
-  },
-  {
-    id: 102,
-    userId: 2,
-    content: 'Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.',
-    rating: 20,
-    movieId: 1,
-    likes: 10,
-    dislikes: 10,
-  },
-  {
-    id: 103,
-    userId: 3,
-    content: 'Enjoyed every moment. Highly recommended!',
-    rating: 16,
-    movieId: 1,
-    likes: 10,
-    dislikes: 10,
-  },
-  {
-    id: 104,
-    userId: 4,
-    content: 'Average movie, nothing special.',
-    rating: 69,
-    movieId: 1,
-    likes: 10,
-    dislikes: 10,
-  },
-  // Add more dummy reviews as needed
-];
+// const dummyReviews: Review[] = [
+//   {
+//     id: 101,
+//     userId: 1,
+//     content: 'Great movie! Loved it!',
+//     rating: 80,
+//     movieId: 1,
+//     likes: 10,
+//     dislikes: 10,
+//   },
+//   {
+//     id: 102,
+//     userId: 2,
+//     content: 'Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.Good storyline, but pacing could be improved.',
+//     rating: 50,
+//     movieId: 1,
+//     likes: 10,
+//     dislikes: 10,
+//   },
+//   {
+//     id: 103,
+//     userId: 3,
+//     content: 'Enjoyed every moment. Highly recommended!',
+//     rating: 16,
+//     movieId: 1,
+//     likes: 10,
+//     dislikes: 10,
+//   },
+//   {
+//     id: 104,
+//     userId: 4,
+//     content: 'Average movie, nothing special.',
+//     rating: 69,
+//     movieId: 1,
+//     likes: 10,
+//     dislikes: 10,
+//   },
+//   // Add more dummy reviews as needed
+// ];
 
 interface Review {
   id: number;
@@ -80,17 +80,21 @@ const MoviePage = ({ params }: MoviePageParams) => {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isDialogOpen, setDialogOpen] = useState(false);
-  const [content, setContent] = useState(''); // Track content in state
-  const [rating, setRating] = useState(0)
+  const [content, setContent] = useState('');
+  const [rating, setRating] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Simulate fetching movie data
-        setMovie(dummyMovie);
+        // Fetch movie details from the API
+        const movieResponse = await fetch(`/api/db/movie?movieId=${params.id}`);
+        const movieData = await movieResponse.json();
+        setMovie(movieData);
 
-        // Simulate fetching review data
-        setReviews(dummyReviews);
+        // Fetch reviews from the API
+        const reviewsResponse = await fetch(`/api/db/review?movieId=${params.id}&page=1&pageSize=10`);
+        const reviewsData = await reviewsResponse.json();
+        setReviews(reviewsData);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -130,7 +134,7 @@ const MoviePage = ({ params }: MoviePageParams) => {
   };
 
   return (
-    <div className="container mx-auto my-8 p-8 bg-gray-800 shadow-md rounded-md overflow-y-auto">
+    <div className="mx-auto my-8 p-8 dark:bg-neutral-800 shadow-md rounded-md overflow-y-auto">
       {movie && (
         <div className="flex flex-col lg:flex-row">
           {/* Movie Image on the Left */}
@@ -147,14 +151,14 @@ const MoviePage = ({ params }: MoviePageParams) => {
             <h1 className="text-4xl font-bold mb-4">{movie.title}</h1>
 
             {/* Description Box */}
-            <div className="bg-gray-400 p-4 rounded-md mb-8 w-full">
+            <div className="dark:bg-stone-700 p-4 rounded-md mb-8 w-full">
               <p className="text-lg text-white">{movie.description}</p>
             </div>
 
             {/* Rating */}
             <div className="flex-shrink-0">
               <p className="text-3xl mb-8">
-                Rating: <Rating value={movie.rating} />
+                Rating: <RatingMovie value={movie.rating} />
               </p>
             </div>
           </div>
@@ -168,7 +172,7 @@ const MoviePage = ({ params }: MoviePageParams) => {
         {/* Add Review Button */}
         <div className="mt-4">
           <button
-            className="bg-blue-500 text-white py-2 px-4 rounded"
+            className="dark:bg-stone-500 text-white py-2 text-xl px-4 rounded"
             onClick={openDialog}
           >
             Add Review
@@ -178,20 +182,20 @@ const MoviePage = ({ params }: MoviePageParams) => {
        {/* Add Review Dialog */}
       {isDialogOpen && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
-          <div className="bg-white p-4 w-96 rounded-md text-black">
+          <div className="dark:bg-stone-400 p-4 w-96 rounded-md text-black">
             <h2 className="text-2xl font-bold mb-4">Add a Review</h2>
             {/* Review Form */}
             <form>
               {/* Content */}
               <div className="mb-4">
-                <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="content" className="block text-sm font-medium  text-gray-700">
                   Content
                 </label>
                 <textarea
                   id="content"
                   name="content"
                   rows={4}
-                  className="mt-1 p-2 w-full border rounded-md"
+                  className="dark:bg-stone-300 mt-1 p-2 w-full border rounded-md"
                   value={content}
                   onChange={(e) => setContent(e.target.value)} // Update content state
                 />
@@ -200,7 +204,7 @@ const MoviePage = ({ params }: MoviePageParams) => {
               {/* Rating Slider */}
               <div className="mb-4">
                 <label htmlFor="rating" className="block text-sm font-medium text-gray-700">
-                  Rating
+                  Rating: {rating} {/* Display the actual rating value */}
                 </label>
                 <input
                   type="range"
@@ -218,14 +222,14 @@ const MoviePage = ({ params }: MoviePageParams) => {
               <div className="flex justify-end">
                 <button
                   type="button"
-                  className="bg-blue-500 text-white py-2 px-4 rounded"
+                  className="dark:bg-stone-500 text-white py-2 px-4 rounded"
                   onClick={closeDialog}
                 >
                   Close
                 </button>
                 <button
                   type="button"
-                  className="ml-2 bg-green-500 text-white py-2 px-4 rounded"
+                  className="ml-2 dark:bg-stone-700 text-white py-2 px-4 rounded"
                   onClick={addReview}
                 >
                   Submit

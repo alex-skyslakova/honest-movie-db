@@ -1,6 +1,6 @@
 // src/components/MovieReview.tsx
 import React, { useState } from 'react';
-import Rating from './Rating';
+import RatingMovie from './RatingMovie';
 
 interface MovieReviewProps {
   review: {
@@ -31,7 +31,7 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review }) => {
   };
 
   return (
-    <div className="border p-4 my-4 bg-gray-500 rounded-md shadow-md flex items-start relative">
+    <div className="border p-4 my-4 dark:bg-stone-700 rounded-md shadow-md flex items-start relative">
       <div className="flex-grow">
         <p className="font-bold">User: {review.userId}</p>
         <p className=" mb-7 mt-2">Content: {review.content}</p>
@@ -39,7 +39,7 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review }) => {
 
       {/* Rating (moved to the bottom left) */}
       <p className="absolute bottom-2 left-2 text-xl font-bold ml-2">
-        Rating: <Rating value={review.rating} />
+        Rating: <RatingMovie value={review.rating} />
       </p>
 
       {/* Like and Dislike Icons */}

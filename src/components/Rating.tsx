@@ -1,23 +1,34 @@
-// src/components/Rating.tsx
-import React from 'react';
+import React from "react";
 
-interface RatingProps {
-  value: number;
+export const Rating = ({percentage}:{percentage: number}) => {
+    return (
+        <svg width={100} height={100}>
+            <g transform={`rotate(-90 ${"100 100"})`}>
+                <Circle colour="lightgrey" />
+                <Circle colour={percentage > 70 ? 'green' : percentage > 30 ? 'orange' : 'red'} percentage={percentage} />
+            </g>
+            <text x="50%" y="50%" dominantBaseline="central" textAnchor="middle" fontSize={"1.2em"} className="fill-black dark:fill-white">
+                {percentage.toFixed(0)}
+            </text>
+        </svg>
+    )
 }
 
-const Rating: React.FC<RatingProps> = ({ value }) => {
-  // Calculate the color based on the percentage
-  const getColor = () => {
-    const red = Math.min(255, Math.round(255 * (100 - value) / 100));
-    const green = Math.min(255, Math.round(255 * value / 100));
-    return `rgb(${red}, ${green}, 0)`;
-  };
-
-  return (
-    <span style={{ color: getColor() }}>
-      {Math.round(value)}/100 {/* Display the rounded whole number */}
-    </span>
-  );
+const Circle = ({ colour, percentage }) => {
+    const r = 40;
+    const circ = 2 * Math.PI * r;
+    const strokePct = ((100 - percentage) * circ) / 100; // where stroke will start, e.g. from 15% to 100%.
+    return (
+        <circle
+            r={r}
+            cx={150}
+            cy={50}
+            fill="transparent"
+            stroke={percentage != 0 ? colour : ""} // remove colour as 0% sets full circumference
+            strokeWidth={"1rem"}
+            strokeDasharray={circ}
+            strokeDashoffset={percentage ? strokePct : 0}
+            strokeLinecap="round"
+        ></circle>
+    );
 };
-
-export default Rating;
