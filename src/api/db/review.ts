@@ -1,6 +1,6 @@
 import {prisma} from "@/api/db/client";
 
-const getReviewsByMovieId = async (movieId: number, page: number, pageSize: number) => {
+export const getReviewsByMovieId = async (movieId: number, page: number, pageSize: number) => {
     return prisma.review.findMany({
         where: {movieId: movieId},
         skip: (page - 1) * pageSize,
