@@ -7,4 +7,6 @@ export type User = {
     id: number;
     name: String;
     badges: Badge[];
+    email: String;
+    password: String;
 }
