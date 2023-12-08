@@ -1,4 +1,21 @@
 {
+    "genres": [
+        { "id": 1, "name": "Action" },
+        { "id": 2, "name": "Adventure" },
+        { "id": 3, "name": "Drama" },
+        { "id": 4, "name": "Fantasy" },
+        { "id": 5, "name": "Comedy" },
+        { "id": 6, "name": "Thriller" },
+        { "id": 7, "name": "Horror" },
+        { "id": 8, "name": "Parody" },
+        { "id": 9, "name": "Mystery" },
+        { "id": 10, "name": "Animation" },
+        { "id": 11, "name": "Crime" },
+        { "id": 12, "name": "History" },
+        { "id": 13, "name": "War" },
+        { "id": 14, "name": "Musical" },
+        { "id": 15, "name": "Romance" }
+    ],
     "badges": [
         {
         "id": 1,

@@ -2,6 +2,13 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+# DB setup (WebStorm)
+* open Database tab
+* click on + and then select Data Source from Path
+* select path to /honest-movie-db/dev.db and SQLite as driver
+* if needed, download missing drivers and test connection
+* you should see new dev.db data source in Database tab, which should contain tables with seeding data
+
 First, run the development server:
 
 ```bash
