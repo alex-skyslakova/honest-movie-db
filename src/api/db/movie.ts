@@ -51,6 +51,34 @@ export const getMovies = async (movieParams: movieParams) => {
     });
 }
 
+export const countMovies = async (movieParams: movieParams) => {
+    return prisma.movie.count({
+        where: {
+            AND: [
+                {
+                    title: {
+                        startsWith: movieParams.namePrefix,
+                    }
+                },
+                {
+                    genres: {
+                        some: {
+                            id: {
+                                equals: movieParams.genreId != null ? movieParams.genreId : undefined,
+                            }
+                        }
+                    }
+                },
+                {
+                    rating: {
+                        gte: movieParams.minRating,
+                    }
+                }
+            ],
+        },
+    });
+}
+
 export const getMovieById = async (movieId: number) => {
     return prisma.movie.findUnique({
         where: {id: movieId},
@@ -85,7 +113,7 @@ export const GET_MOVIE = async (req: Request) => {
         return Response.json(await getMovieById(parseInt(id)));
     }
 
-    if (page < 0 || pageSize < 0) {
+    if (page < 1 || pageSize < 0) {
         return Response.json({error: 'Invalid pagination parameters'});
     }
 
@@ -103,6 +131,9 @@ export const GET_MOVIE = async (req: Request) => {
     if (filterByRating) {
         params.minRating = parseInt(filterByRating);
     }
+
+    if (searchParams.has('count'))
+        return Response.json(await countMovies(params));
 
     return Response.json(await getMovies(params));
 }
