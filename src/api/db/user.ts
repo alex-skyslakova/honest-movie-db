@@ -37,7 +37,7 @@ export const GET_USER = async (req: Request) => {
     const {searchParams} = new URL(req.url);
     const userId = searchParams.get('userId');
     if (userId && await isValidUserId(Number(userId))) {
-        return Response.json(getUserById(Number(userId)));
+        return Response.json(await getUserById(Number(userId)));
     } else {
         return Response.json({error: 'Invalid userId'});
     }
@@ -50,7 +50,7 @@ export const POST_USER = async (req: Request) => {
         profilePicture: searchParams.get('userProfilePicture') ?? '',
     }
 
-    return Response.json(createUser(user));
+    return Response.json(await createUser(user));
 }
 
 export const PUT_USER = async (req: Request) => {
@@ -67,7 +67,7 @@ export const PUT_USER = async (req: Request) => {
         profilePicture: searchParams.get('userProfilePicture') ?? originalUser.profilePicture,
     }
 
-    return Response.json(updateUser(user));
+    return Response.json(await updateUser(user));
 }
 
 export const DELETE_USER = async (req: Request) => {
@@ -78,5 +78,5 @@ export const DELETE_USER = async (req: Request) => {
         return new Response('User not found', {status: 404});
     }
 
-    return Response.json(deleteUser(userId));
+    return Response.json(await deleteUser(userId));
 }
