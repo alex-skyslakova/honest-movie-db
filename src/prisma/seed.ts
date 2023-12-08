@@ -1,4 +1,4 @@
-import * as data from './data.json'; // Replace with the path to your JSON file
+import * as data from './data.json';
 import {prisma} from "@/api/db/client";
 
 
