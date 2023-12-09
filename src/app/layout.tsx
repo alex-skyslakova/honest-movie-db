@@ -4,6 +4,8 @@ import './globals.css'
 import {Navbar} from "@/components/Navbar";
 import SideBar from "@/components/SideBar";
 
+import { Providers } from './Providers';
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -20,11 +22,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
       <Navbar/>
-        <main className="flex min-h-screen flex-row bg-white dark:bg-black">
-            <SideBar/>
+        <main className="flex min-h-screen flex-col bg-white dark:bg-black">
             <div className="flex flex-col">
-                {children}
+                <Providers>{children}</Providers>
             </div>
+            <Providers>{children}</Providers>
         </main>
       <footer className="py-2 px-4 mt-auto text-right dark:bg-stone-600">React project 2023</footer>
       </body>
