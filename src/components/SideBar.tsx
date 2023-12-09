@@ -1,19 +1,17 @@
-'use client';
 import SideBarItem from "@/components/SideBarItem";
 import React from "react";
 import {usePathname} from "next/navigation";
 import {Movie} from ".prisma/client";
 import MovieOfThePeriod from "@/components/MovieOfThePeriod";
-import {getMovies} from "@/api/db/movie";
+import {getMovies as getMoviesFromDb} from "@/api/db/movie";
+import {MovieOptions} from "@/model/movie";
+import {SideBarWrapper} from "@/components/SideBarWrapper";
 
 
 const SideBar = async () => {
-    const pathname = usePathname()
-    console.log(pathname)
-    const sidebarWidth = pathname === '/' || pathname === null ? '30%' : '15%'
 
-    const movieOfTheWeek = await getMovies({page: 1, pageSize: 1}) as Movie[];
-    const movie = movieOfTheWeek.pop();
+    const movieOfTheWeek = await getMovies( 1, 1);
+    const movie = movieOfTheWeek.pop() as Movie;
     const movieOfTheDay = {
         id: 567,
         title: "The Matrix",
@@ -22,16 +20,14 @@ const SideBar = async () => {
         rating: 90,
     } as Movie;
     return (
-        <aside className={"sidebar bg-stone-100 dark:bg-stone-800 flex flex-col hidden md:flex "} style={{ width: sidebarWidth }}>
-            <SideBarItem title={"Movie of the Week"}>
-                {movie ? <MovieOfThePeriod {...movie}/> : <div>No movie of the week</div>}
-            </SideBarItem>
-
-            <SideBarItem title={"Movie of the Day"}>
-                {movie ? <MovieOfThePeriod {...movie}/> : <div>No movie of the day</div>}
-            </SideBarItem>
-        </aside>
+        <SideBarWrapper  movieOfTheWeek={movie} movieOfTheDay={movie}/>
     );
 };
+
+async function getMovies(page: number, pageSize: number): Promise<Movie[]> {
+    'use server'
+    const movies = await getMoviesFromDb({page: page, pageSize: pageSize})
+    return movies as Movie[]
+}
 
 export default SideBar;
