@@ -5,6 +5,7 @@ import {MoviesContext} from "@/components/MoviesContextProvider";
 import {useQuery} from "@tanstack/react-query";
 import {Genre} from "@/model/genre";
 import {MovieOptions} from "@/model/movie";
+import {PageSizeSelector} from "@/components/PageSizeSelector";
 
 const getGenres = async (): Promise<Genre[]> => {
     const response = await fetch('/api/genre')
@@ -61,16 +62,7 @@ export const MoviesSearchBar = () => {
                 <button disabled={options.pageNumber == 1} onClick={() => setOptions(Object.assign({}, options, {pageNumber: options.pageNumber-1}))} className={`${options.pageNumber == 1 ? "text-gray-500 bg-gray-300 dark:bg-stone-900" : "bg-gray-200 dark:bg-stone-700"} rounded-full px-5 text-xl`}>&#10094;</button>
                 <button disabled={options.pageNumber * options.pageSize >= movieCount} onClick={() => setOptions(Object.assign({}, options, {pageNumber: options.pageNumber+1}))} className={`${options.pageNumber * options.pageSize >= movieCount ? "text-gray-500 bg-gray-300 dark:bg-stone-900" : "bg-gray-200 dark:bg-stone-700"} rounded-full px-5 text-xl`}>&#10095;</button>
             </div>
-            <div className="rounded-xl bg-gray-200 dark:bg-stone-700 flex items-center gap-x-2 px-4">
-                <label htmlFor="selectPageSize">Movies per page:</label>
-                <select id="selectPageSize" className="bg-gray-200 dark:bg-stone-700" value={options.pageSize} onChange={event => {
-                    setOptions(Object.assign({}, options, {pageSize: +event.target.value, pageNumber: 1}))
-                }}>
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                    <option value={50}>50</option>
-                </select>
-            </div>
+            <PageSizeSelector text="Movies per page:" value={options.pageSize} onChange={event => setOptions(Object.assign({}, options, {pageSize: +event.target.value, pageNumber: 1}))}/>
         </div>
     )
 }
