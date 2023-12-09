@@ -16,3 +16,11 @@ export type Movie = {
     rating: number;
     reviews: Review[];
 }
+
+export interface MovieOptions {
+    titlePrefix: string;
+    minRating: number;
+    genreId?: number;
+    pageNumber: number;
+    pageSize: number;
+}
