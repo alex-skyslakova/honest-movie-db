@@ -4,6 +4,7 @@ import RatingMovie from "@/components/RatingMovie";
 
 interface MovieDetailsProps {
     movie: {
+        id: number;
         title: string;
         description: string;
         image: string | null;
@@ -26,7 +27,11 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ movie }) => {
             {/* Movie Details on the Right */}
             <div className="flex-grow">
                 <h1 className="text-4xl font-bold mb-4">{movie.title}</h1>
+                    <MovieGenres value={movie.id} />
+                {/* Genres */}
+                <div className="dark:bg-stone-700 p-4 rounded-md mb-8 w-full">
 
+                </div>
                 {/* Description Box */}
                 <div className="dark:bg-stone-700 p-4 rounded-md mb-8 w-full">
                     <p className="text-lg text-white">{movie.description}</p>
