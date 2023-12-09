@@ -2,9 +2,20 @@ import Image from 'next/image'
 import { LoginStatus } from './LoginStatus'
 
 export default function Home() {
+  const backgroundStyle = {
+    backgroundImage: 'url(/img/background.png), linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,5)) ',
+    backgroundSize: 'cover',     // Ensure the image covers the whole area
+    backgroundPosition: 'center', // Center the image
+    height: '100vh',             // Set the height of the div (e.g., full viewport height)
+    width: '100%',                // Set the width of the div
+    // Add any additional styles you need
+    backgroundBlendMode: 'overlay'
+  };
+
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
+    <main className="flex min-h-screen flex-col items-center justify-between p-24" style={backgroundStyle}>
+        <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
         <LoginStatus /> {/* Include the LoginStatus component here */}
         <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
           <a

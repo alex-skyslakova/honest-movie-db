@@ -22,11 +22,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
       <Navbar/>
-        <main className="flex min-h-screen flex-col bg-white dark:bg-black">
+        <main className="flex min-h-screen flex-row bg-white dark:bg-black">
+            <SideBar/>
             <div className="flex flex-col">
                 <Providers>{children}</Providers>
             </div>
-            <Providers>{children}</Providers>
         </main>
       <footer className="py-2 px-4 mt-auto text-right dark:bg-stone-600">React project 2023</footer>
       </body>
