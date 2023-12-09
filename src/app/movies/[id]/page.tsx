@@ -94,9 +94,9 @@ const MoviePage = ({ params }: MoviePageParams) => {
         setMovie(movieData);
 
         // Fetch reviews from the API
-        //const reviewsResponse = await fetch(`/api/db/review?movieId=${params.id}&page=1&pageSize=10`);
-        //const reviewsData = await reviewsResponse.json();
-        setReviews(dummyReviews);
+        const reviewsResponse = await fetch(`/api/review?movieId=${params.id}&page=1&pageSize=10`);
+        const reviewsData = await reviewsResponse.json();
+        setReviews(reviewsData);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -119,17 +119,11 @@ const MoviePage = ({ params }: MoviePageParams) => {
   const addReview = async () => {
     try {
       // Make a POST request to the API endpoint
-      const response = await fetch('/api/db/review', {
+      const response = await fetch(`/api/review?userId=${1}&movieId=${params.id}&rating=${rating}&content=${content}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          userId: 1, // Replace with the actual user ID
-          movieId: params.id,
-          rating: rating,
-          content: content,
-        }),
       });
   
       // Check if the request was successful (status code 2xx)

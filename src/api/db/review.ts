@@ -82,9 +82,9 @@ export const POST_REVIEW = async (req: Request) => {
         return Response.json({error: 'movieId is required'});
     }
     const review = {
-        userId: searchParams.get('userId'),
-        movieId: searchParams.get('movieId'),
-        rating: searchParams.get('rating') ?? 0,
+        userId: Number(searchParams.get('userId')),
+        movieId: Number(searchParams.get('movieId')),
+        rating: Number(searchParams.get('rating')) ?? 0,
         content: searchParams.get('content') ?? '',
     }
 
