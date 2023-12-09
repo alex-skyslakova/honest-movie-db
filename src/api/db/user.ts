@@ -1,8 +1,9 @@
 import {prisma} from "@/api/db/client";
 import {Prisma, User} from ".prisma/client";
 import UserUncheckedCreateInput = Prisma.UserUncheckedCreateInput;
+import UserUncheckedUpdateInput = Prisma.UserUncheckedUpdateInput;
 
-export const getUserById = async (userId: number) => {
+export const getUserById = async (userId: string) => {
     return prisma.user.findUnique({
         where: {id: userId},
     });
@@ -14,20 +15,23 @@ export const createUser = async (user: UserUncheckedCreateInput) => {
     });
 }
 
-export const updateUser = async (user: User) => {
+export const updateUser = async (user: UserUncheckedUpdateInput) => {
+    if (user.id === undefined || !await isValidUserId(user.id.toString())) {
+        return null;
+    }
     return prisma.user.update({
-        where: {id: user.id},
+        where: {id: user.id.toString()},
         data: user,
     });
 }
 
-export const deleteUser = async (userId: number) => {
+export const deleteUser = async (userId: string) => {
     return prisma.user.delete({
         where: {id: userId},
     });
 }
 
-export const isValidUserId = async (userId: number) => {
+export const isValidUserId = async (userId: string) => {
     return prisma.user.findUnique({
         where: {id: userId},
     }) !== null;
@@ -36,8 +40,8 @@ export const isValidUserId = async (userId: number) => {
 export const GET_USER = async (req: Request) => {
     const {searchParams} = new URL(req.url);
     const userId = searchParams.get('userId');
-    if (userId && await isValidUserId(Number(userId))) {
-        return Response.json(getUserById(Number(userId)));
+    if (userId && await isValidUserId(userId)) {
+        return Response.json(getUserById(userId));
     } else {
         return Response.json({error: 'Invalid userId'});
     }
@@ -47,7 +51,7 @@ export const POST_USER = async (req: Request) => {
     const {searchParams} = new URL(req.url);
     const user = {
         name: searchParams.get('userName') ?? 'New User',
-        profilePicture: searchParams.get('userProfilePicture') ?? '',
+        image: searchParams.get('userImage') ?? '',
     }
 
     return Response.json(createUser(user));
@@ -55,16 +59,16 @@ export const POST_USER = async (req: Request) => {
 
 export const PUT_USER = async (req: Request) => {
     const {searchParams} = new URL(req.url);
-    const userId = Number(searchParams.get('userId'));
-    const originalUser = await getUserById(userId);
+    const userId = searchParams.get('userId');
+    const originalUser = await getUserById(userId ?? '');
     if (!originalUser) {
         return new Response('User not found', {status: 404});
     }
 
     const user = {
-        id: userId,
+        id: userId ?? '',
         name: searchParams.get('userName') ?? originalUser.name,
-        profilePicture: searchParams.get('userProfilePicture') ?? originalUser.profilePicture,
+        image: searchParams.get('userImage') ?? originalUser.image,
     }
 
     return Response.json(updateUser(user));
@@ -72,9 +76,9 @@ export const PUT_USER = async (req: Request) => {
 
 export const DELETE_USER = async (req: Request) => {
     const {searchParams} = new URL(req.url);
-    const userId = Number(searchParams.get('userId'));
+    const userId = searchParams.get('userId');
 
-    if (!await isValidUserId(userId)) {
+    if (userId === null || !await isValidUserId(userId)) {
         return new Response('User not found', {status: 404});
     }
 
