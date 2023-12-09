@@ -56,13 +56,13 @@ export const GET_VOTE = async (req: Request) => {
     const validReviewId = await isValidReviewId(reviewId);
 
     if (validUserId && validReviewId) {
-        return Response.json(getVoteByUserIdAndReviewId(userId, reviewId));
+        return Response.json(await getVoteByUserIdAndReviewId(userId, reviewId));
     }
     if (validUserId) {
-        return Response.json(getVotesByUserId(userId));
+        return Response.json(await getVotesByUserId(userId));
     }
     if (validReviewId) {
-        return Response.json(getVotesByReviewId(Number(reviewId)));
+        return Response.json(await getVotesByReviewId(Number(reviewId)));
     }
     return Response.json({error: 'Invalid parameters'});
 }
@@ -81,7 +81,7 @@ export const POST_VOTE = async (req: Request) => {
         reviewId: reviewId,
         isLike: (searchParams.get('isLike')?.toLowerCase() === 'true')
     }
-    return Response.json(createVote(vote));
+    return Response.json(await createVote(vote));
 }
 
 export const PUT_VOTE = async (req: Request) => {
@@ -97,7 +97,7 @@ export const PUT_VOTE = async (req: Request) => {
         reviewId: originalVote.reviewId,
         isLike: (searchParams.get('isLike')?.toLowerCase() === 'true')
     }
-    return Response.json(updateVote(vote));
+    return Response.json(await updateVote(vote));
 }
 
 export const DELETE_VOTE = async (req: Request) => {
@@ -107,5 +107,5 @@ export const DELETE_VOTE = async (req: Request) => {
     if (!originalVote) {
         return Response.json({error: 'Invalid parameters'});
     }
-    return Response.json(deleteVote(voteId));
+    return Response.json(await deleteVote(voteId));
 }

@@ -44,9 +44,9 @@ export const GET_GENRE = async (req: Request) => {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('genreId');
     if (id) {
-        return Response.json(getGenreById(parseInt(id)));
+        return Response.json(await getGenreById(parseInt(id)));
     }
-    return Response.json(getGenres());
+    return Response.json(await getGenres());
 }
 
 export const POST_GENRE = async (req: Request) => {
@@ -55,7 +55,7 @@ export const POST_GENRE = async (req: Request) => {
         name: searchParams.get('genreName') ?? 'New Genre',
     }
 
-    return Response.json(createGenre(genre));
+    return Response.json(await createGenre(genre));
 }
 
 export const PUT_GENRE = async (req: Request) => {
@@ -69,7 +69,7 @@ export const PUT_GENRE = async (req: Request) => {
         return new Response('Genre not found', { status: 404 });
     }
 
-    return Response.json(updateGenre(genre));
+    return Response.json(await updateGenre(genre));
 }
 
 export const DELETE_GENRE = async (req: Request) => {
@@ -80,5 +80,5 @@ export const DELETE_GENRE = async (req: Request) => {
         return new Response('Genre not found', { status: 404 });
     }
 
-    return Response.json(deleteGenre(genreId));
+    return Response.json(await deleteGenre(genreId));
 }
