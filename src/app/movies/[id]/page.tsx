@@ -89,9 +89,9 @@ const MoviePage = ({ params }: MoviePageParams) => {
     const fetchData = async () => {
       try {
         // Fetch movie details from the API
-        //const movieResponse = await fetch(`/api/db/movie?movieId=${params.id}`);
-        //const movieData = await movieResponse.json();
-        setMovie(dummyMovie);
+        const movieResponse = await fetch(`/api/movie?movieId=${params.id}`);
+        const movieData = await movieResponse.json();
+        setMovie(movieData);
 
         // Fetch reviews from the API
         //const reviewsResponse = await fetch(`/api/db/review?movieId=${params.id}&page=1&pageSize=10`);
@@ -180,7 +180,7 @@ const MoviePage = ({ params }: MoviePageParams) => {
           <div className="flex-shrink-0 pr-8">
             <img
               className="w-64 h-64 object-cover rounded-md border-2 border-gray-300 shadow-md"
-              src={`/img/movies/${movie.image || 'default-image.jpg'}`}
+              src={`${movie.image || 'default-image.jpg'}`}
               alt={movie.title}
             />
           </div>
