@@ -1,14 +1,13 @@
 "use client";
 
-// src/app/movies/[id]/page.tsx
+import React, { useState, useEffect } from 'react';
 import MovieReview from '@/components/MovieReview';
 import MovieDetails from '@/components/MovieDetails';
-import React, { useState, useEffect } from 'react';
-import AddReviewDialog from "@/components/AddReviewDialog";
-import {Genre} from "@/model/genre";
+import AddReviewDialog from '@/components/AddReviewDialog';
+import { Genre } from '@/model/genre';
 import { Vote } from '@prisma/client';
 import { useSession } from 'next-auth/react';
-import ReactTooltip from 'react-tooltip';
+import MoviePageLoader from "@/app/MoviePageLoader";
 
 interface Review {
   id: number;
@@ -34,15 +33,15 @@ type MoviePageParams = {
   params: { id: number };
 };
 
-
-const MoviePage = ({ params }: MoviePageParams) => {
+const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [content, setContent] = useState('');
   const [rating, setRating] = useState(0);
   const { data: session } = useSession();
-
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   let loggedUserId = "unknown";
 
   useEffect(() => {
@@ -53,12 +52,24 @@ const MoviePage = ({ params }: MoviePageParams) => {
         const movieData = await movieResponse.json();
         setMovie(movieData);
 
+        if (movieData.isNull) {
+          setError("Movie with given id does not exist");
+          setLoading(false);
+          return;
+        }
+
+
         // Fetch reviews from the API
         const reviewsResponse = await fetch(`/api/review?movieId=${params.id}&page=1&pageSize=10`);
         const reviewsData = await reviewsResponse.json();
         setReviews(reviewsData);
+
+        // Data has been successfully loaded
+        setLoading(false);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        setError("Movie with given id does not exist");
+        setLoading(false);
+        return;
       }
     };
 
@@ -112,48 +123,63 @@ const MoviePage = ({ params }: MoviePageParams) => {
     }
   };
 
-  return (
-      <div className="mx-auto my-8 p-8 dark:bg-neutral-800 shadow-md rounded-md overflow-y-auto">
-        {movie && (
-            <div>
-              <MovieDetails movie={movie}/>
+  if (loading) {
+    // Data is still loading, display loader
+    return <MoviePageLoader />;
+  }
+
+  if (error) {
+    // Display error message or redirect to the error page
+    return (
+        <div className="flex justify-center items-center min-h-screen text-red-500 text-4xl">
+          Error: {error}
+        </div>
+    );
+  }
+  else {
+    return (
+        <div className="mx-auto my-8 p-8 dark:bg-neutral-800 shadow-md rounded-md overflow-y-auto">
+          {movie && (
+              <div>
+                <MovieDetails movie={movie} />
+              </div>
+          )}
+
+          <div className="mt-8">
+            <h2 className="text-2xl font-bold mb-4">Movie Reviews</h2>
+
+            <div className="mt-4 relative">
+              <button
+                  className={`dark:bg-stone-500 text-white py-2 text-xl px-4 rounded ${
+                      loggedUserId === 'unknown' ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                  onClick={openDialog}
+                  disabled={loggedUserId === 'unknown'}
+                  title={loggedUserId === 'unknown' ? 'Please log in to add reviews' : ''}
+              >
+                Add Review
+              </button>
             </div>
-        )}
 
-        {/* Reviews Section */}
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">Movie Reviews</h2>
+            <AddReviewDialog
+                isOpen={isDialogOpen}
+                onClose={closeDialog}
+                onAddReview={addReview}
+                content={content}
+                rating={rating}
+                onContentChange={(newContent) => setContent(newContent)}
+                onRatingChange={(newRating) => setRating(newRating)}
+            />
 
-          {/* Add Review Button */}
-          <div className="mt-4 relative">
-            <button
-                className={`dark:bg-stone-500 text-white py-2 text-xl px-4 rounded ${loggedUserId === "unknown" ? 'opacity-50 cursor-not-allowed' : ''}`}
-                onClick={openDialog}
-                disabled={loggedUserId === "unknown"}
-                title={loggedUserId === "unknown" ? "Please log in to add reviews" : ""}
-            >
-              Add Review
-            </button>
+            {reviews.map((review) => (
+                <MovieReview key={review.id} review={review} userId={loggedUserId} />
+            ))}
           </div>
+        </div>
+    );
+  }
 
-          {/* Add Review Dialog */}
-          <AddReviewDialog
-              isOpen={isDialogOpen}
-              onClose={() => setDialogOpen(false)}
-              onAddReview={addReview}
-              content={content}
-              rating={rating}
-              onContentChange={(newContent) => setContent(newContent)}
-              onRatingChange={(newRating) => setRating(newRating)}
-        />
-
-        {/* Display Reviews */}
-        {movie && (reviews.map((review) => (
-            <MovieReview key={review.id} review={review} userId={loggedUserId} />
-        )))}
-      </div>
-    </div>
-  );
 };
+
 
 export default MoviePage;

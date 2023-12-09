@@ -14,7 +14,7 @@ interface MovieDetailsProps {
     };
 }
 
-const MovieDetails: React.FC<MovieDetailsProps> = ({ movie }) => {
+const MovieDetails: React.FC<MovieDetailsProps> = ({ movie } ) => {
     return (
         <div className="flex flex-col lg:flex-row">
             {/* Movie Image on the Left */}
