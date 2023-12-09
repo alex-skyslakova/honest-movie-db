@@ -54,7 +54,7 @@ export const POST_USER = async (req: Request) => {
         image: searchParams.get('userImage') ?? '',
     }
 
-    return Response.json(await createUser(user));
+    return Response.json(createUser(user));
 }
 
 export const PUT_USER = async (req: Request) => {
@@ -71,7 +71,7 @@ export const PUT_USER = async (req: Request) => {
         image: searchParams.get('userImage') ?? originalUser.image,
     }
 
-    return Response.json(await updateUser(user));
+    return Response.json(updateUser(user));
 }
 
 export const DELETE_USER = async (req: Request) => {
@@ -82,5 +82,5 @@ export const DELETE_USER = async (req: Request) => {
         return new Response('User not found', {status: 404});
     }
 
-    return Response.json(await deleteUser(userId));
+    return Response.json(deleteUser(userId));
 }
