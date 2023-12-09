@@ -61,13 +61,13 @@ export const GET_REVIEW = async (req: Request) => {
     const pageSize = parseInt(searchParams.get('pageSize') ?? '') ?? 10;
 
     if (reviewId) {
-        return Response.json(getReviewById(Number(reviewId)));
+        return Response.json(await getReviewById(Number(reviewId)));
     } else if (userId) {
-        return Response.json(getReviewsByUserId(Number(userId), page, pageSize));
+        return Response.json(await getReviewsByUserId(Number(userId), page, pageSize));
     } else if (movieId) {
-        return Response.json(getReviewsByMovieId(Number(movieId), page, pageSize));
+        return Response.json(await getReviewsByMovieId(Number(movieId), page, pageSize));
     } else {
-        return Response.json(getReviews(page, pageSize));
+        return Response.json(await getReviews(page, pageSize));
     }
 }
 
@@ -88,7 +88,7 @@ export const POST_REVIEW = async (req: Request) => {
         content: searchParams.get('content') ?? '',
     }
 
-    return Response.json(createReview(review));
+    return Response.json(await createReview(review));
 }
 
 export const PUT_REVIEW = async (req: Request) => {
@@ -107,7 +107,7 @@ export const PUT_REVIEW = async (req: Request) => {
         content: searchParams.get('content') ?? originalReview.content,
     }
 
-    return Response.json(updateReview(review));
+    return Response.json(await updateReview(review));
 }
 
 export const DELETE_REVIEW = async (req: Request) => {
@@ -118,5 +118,5 @@ export const DELETE_REVIEW = async (req: Request) => {
         return new Response('Review not found', {status: 404});
     }
 
-    return Response.json(deleteReview(reviewId));
+    return Response.json(await deleteReview(reviewId));
 }
