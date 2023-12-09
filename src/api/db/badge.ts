@@ -2,7 +2,7 @@ import {prisma} from "@/api/db/client";
 import {Badge, Prisma} from ".prisma/client";
 import BadgeUncheckedCreateInput = Prisma.BadgeUncheckedCreateInput;
 
-const getBadgesByUserId = async (userId: number) => {
+const getBadgesByUserId = async (userId: string) => {
     return prisma.user.findUnique({
         where: {id: userId},
         include: {badges: true},
@@ -28,7 +28,7 @@ const updateBadge = async (badge: Badge) => {
     });
 }
 
-const addBadgeToUser = async (badgeId: number, userId: number) => {
+const addBadgeToUser = async (badgeId: number, userId: string) => {
     return prisma.user.update({
         where: {id: userId},
         data: {
@@ -39,7 +39,7 @@ const addBadgeToUser = async (badgeId: number, userId: number) => {
     });
 }
 
-const removeBadgeFromUser = async (badgeId: number, userId: number) => {
+const removeBadgeFromUser = async (badgeId: number, userId: string) => {
     return prisma.user.update({
         where: {id: userId},
         data: {
@@ -63,7 +63,7 @@ export const GET_BADGE = async (req: Request) => {
     const badgeId = searchParams.get('badgeId');
 
     if (userId) {
-        return getBadgesByUserId(Number(userId));
+        return getBadgesByUserId(userId);
     } else if (badgeId) {
         return getBadgeById(Number(badgeId));
     } else {
@@ -96,10 +96,10 @@ export const PUT_BADGE = async (req: Request) => {
     }
     const updated = updateBadge(badge);
     if (searchParams.get('addUserId')) {
-        await addBadgeToUser(badgeId, Number(searchParams.get('userId')));
+        await addBadgeToUser(badgeId, searchParams.get('userId') ?? '');
     }
     if (searchParams.get('removeUserId')) {
-        await removeBadgeFromUser(badgeId, Number(searchParams.get('userId')));
+        await removeBadgeFromUser(badgeId, searchParams.get('userId') ?? '');
     }
     return updated
 }

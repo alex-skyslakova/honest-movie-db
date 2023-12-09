@@ -11,13 +11,13 @@ export const getVotesByReviewId = async (reviewId: number) => {
     });
 }
 
-export const getVotesByUserId = async (userId: number) => {
+export const getVotesByUserId = async (userId: string) => {
     return prisma.vote.findMany({
         where: {userId: userId},
     });
 }
 
-export const getVoteByUserIdAndReviewId = async (userId: number, reviewId: number) => {
+export const getVoteByUserIdAndReviewId = async (userId: string, reviewId: number) => {
     return prisma.vote.findFirst({
         where: {userId: userId, reviewId: reviewId},
     });
@@ -51,7 +51,7 @@ export const deleteVote = async (voteId: number) => {
 export const GET_VOTE = async (req: Request) => {
     const {searchParams} = new URL(req.url);
     const reviewId = parseInt(searchParams.get('reviewId') ?? '');
-    const userId = parseInt(searchParams.get('userId') ?? '');
+    const userId = searchParams.get('userId') ?? '';
     const validUserId = await isValidUserId(userId);
     const validReviewId = await isValidReviewId(reviewId);
 
@@ -69,7 +69,7 @@ export const GET_VOTE = async (req: Request) => {
 
 export const POST_VOTE = async (req: Request) => {
     const {searchParams} = new URL(req.url);
-    const userId = parseInt(searchParams.get('userId') ?? '');
+    const userId = searchParams.get('userId') ?? '';
     const reviewId = parseInt(searchParams.get('reviewId') ?? '');
     const validUserId = await isValidUserId(userId);
     const validReviewId = await isValidReviewId(reviewId);

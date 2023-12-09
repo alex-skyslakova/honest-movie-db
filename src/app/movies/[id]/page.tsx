@@ -68,9 +68,10 @@ const MoviePage = ({ params }: MoviePageParams) => {
   };
 
   const addReview = async () => {
+    let a = "clpy5pfb400003nj1j3un3652";
     try {
       // Make a POST request to the API endpoint
-      const response = await fetch(`/api/review?userId=${1}&movieId=${params.id}&rating=${rating}&content=${content}`, {
+      const response = await fetch(`/api/review?userId=clpy5pfb400003nj1j3un3652&movieId=${params.id}&rating=${rating}&content=${content}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

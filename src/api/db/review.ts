@@ -8,7 +8,7 @@ export const getReviewsByMovieId = async (movieId: number, page: number, pageSiz
     });
 }
 
-const getReviewsByUserId = async (userId: number, page: number, pageSize: number) => {
+const getReviewsByUserId = async (userId: string, page: number, pageSize: number) => {
     return prisma.review.findMany({
         where: {userId: userId},
         skip: (page - 1) * pageSize,
@@ -63,7 +63,7 @@ export const GET_REVIEW = async (req: Request) => {
     if (reviewId) {
         return Response.json(await getReviewById(Number(reviewId)));
     } else if (userId) {
-        return Response.json(await getReviewsByUserId(Number(userId), page, pageSize));
+        return Response.json(await getReviewsByUserId(userId, page, pageSize));
     } else if (movieId) {
         return Response.json(await getReviewsByMovieId(Number(movieId), page, pageSize));
     } else {
@@ -82,7 +82,7 @@ export const POST_REVIEW = async (req: Request) => {
         return Response.json({error: 'movieId is required'});
     }
     const review = {
-        userId: Number(searchParams.get('userId')),
+        userId: searchParams.get('userId'),
         movieId: Number(searchParams.get('movieId')),
         rating: Number(searchParams.get('rating')) ?? 0,
         content: searchParams.get('content') ?? '',
