@@ -46,7 +46,6 @@ export const getMovies = async (movieParams: movieParams) => {
         take: take,
         include: {
             genres: true,
-            reviews: true,
         },
     });
 }
@@ -82,6 +81,10 @@ export const countMovies = async (movieParams: movieParams) => {
 export const getMovieById = async (movieId: number) => {
     return prisma.movie.findUnique({
         where: {id: movieId},
+        include: {
+            genres: true,
+            reviews: true,
+        },
     });
 };
 

@@ -5,6 +5,9 @@ export const getReviewsByMovieId = async (movieId: number, page: number, pageSiz
         where: {movieId: movieId},
         skip: (page - 1) * pageSize,
         take: pageSize,
+        include: {
+            votes: true,
+        },
     });
 }
 

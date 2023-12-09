@@ -1,6 +1,7 @@
 // components/MovieDetails.tsx
 import React from 'react';
 import RatingMovie from "@/components/RatingMovie";
+import {Genre} from "@/model/genre";
 
 interface MovieDetailsProps {
     movie: {
@@ -9,6 +10,7 @@ interface MovieDetailsProps {
         description: string;
         image: string | null;
         rating: number;
+        genres: Genre[]
     };
 }
 
@@ -27,10 +29,14 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ movie }) => {
             {/* Movie Details on the Right */}
             <div className="flex-grow">
                 <h1 className="text-4xl font-bold mb-4">{movie.title}</h1>
-                    <MovieGenres value={movie.id} />
-                {/* Genres */}
-                <div className="dark:bg-stone-700 p-4 rounded-md mb-8 w-full">
 
+                {/* Genres */}
+                <div className="flex mt-4">
+                    {movie.genres.map((genre) => (
+                        <div key={genre.id} className="dark:bg-stone-600 rounded-md p-2 mr-2 mb-6">
+                            {genre.name}
+                        </div>
+                    ))}
                 </div>
                 {/* Description Box */}
                 <div className="dark:bg-stone-700 p-4 rounded-md mb-8 w-full">

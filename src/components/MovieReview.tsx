@@ -1,11 +1,12 @@
 // src/components/MovieReview.tsx
 import React, { useState, useEffect } from 'react';
 import RatingMovie from './RatingMovie';
+import { User } from '@prisma/client';
 
 interface MovieReviewProps {
   review: {
     id: number;
-    userId: number;
+    userId: string;
     content: string;
     rating: number;
     movieId: number;
@@ -17,38 +18,46 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review, userId }) => {
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
   const [userVote, setUserVote] = useState<boolean | null>(null); // Indicates if the user has voted
+  const [userDetails, setUserDetails] = useState<User | null>(null);
 
   useEffect(() => {
     // Fetch likes, dislikes, and user vote for the review
-    const fetchVotes = async () => {
+    const fetchData = async () => {
       try {
         const response = await fetch(`/api/vote?reviewId=${review.id}`);
+
         const votes = await response.json();
 
-        if (!votes) {
-          // Handle the case where votes are null (or any other error handling logic)
-          console.error('Votes are null or empty.');
-          return;
-        }
+        let likesCount = 0;
+        let dislikesCount = 0;
 
-        const likesCount = votes.filter((vote: { isLike: boolean }) => vote.isLike).length;
-        const dislikesCount = votes.filter((vote: { isLike: boolean }) => !vote.isLike).length;
+        if (votes) {
+          likesCount = votes.filter((vote: { isLike: boolean }) => vote.isLike).length;
+          dislikesCount = votes.filter((vote: { isLike: boolean }) => !vote.isLike).length;
+          const userVote = votes.find((vote: { userId: string }) => vote.userId === userId);
+          setUserVote(userVote ? userVote.isLike : null);
+        }
 
         setLikes(likesCount);
         setDislikes(dislikesCount);
 
         // Check if the user has voted for this review
-        const userVote = votes.find((vote: { userId: string }) => vote.userId === userId);
-        setUserVote(userVote ? userVote.isLike : null);
+
+        const user = await fetch(`/api/user?userId=${review.userId}`);
+        const userData = await user.json();
+        setUserDetails(userData);
+
       } catch (error) {
-        console.error('Error fetching votes:', error);
+        console.error('Error fetching data:', error);
       }
+
     };
 
-    fetchVotes();
+    fetchData();
   }, [review.id, userId]);
 
   const handleLike = async () => {
+    console.log("Details: ", JSON.stringify(userDetails));
     if (userVote !== true) {
       try {
         // Send a request to post a new vote with isLike=true
@@ -91,7 +100,7 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review, userId }) => {
   return (
       <div className="border p-4 my-4 dark:bg-stone-700 rounded-md shadow-md flex items-start relative">
         <div className="flex-grow">
-          <p className="font-bold">User: {review.userId}</p>
+          <p className="font-bold">User: {userDetails ? userDetails.name : review.userId}</p>
           <p className=" mb-7 mt-2">Content: {review.content}</p>
         </div>
 

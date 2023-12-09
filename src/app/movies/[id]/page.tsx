@@ -3,17 +3,22 @@
 // src/app/movies/[id]/page.tsx
 import MovieReview from '@/components/MovieReview';
 import MovieDetails from '@/components/MovieDetails';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import AddReviewDialog from "@/components/AddReviewDialog";
+import {Genre} from "@/model/genre";
+import { Vote } from '@prisma/client';
+import { useSession } from 'next-auth/react';
+import ReactTooltip from 'react-tooltip';
 
 interface Review {
   id: number;
-  userId: number;
+  userId: string;
   content: string;
   rating: number;
   movieId: number;
   likes: number;
   dislikes: number;
+  votes: Vote[];
 }
 
 interface Movie {
@@ -22,6 +27,7 @@ interface Movie {
   description: string;
   image: string | null;
   rating: number;
+  genres: Genre[];
 }
 
 type MoviePageParams = {
@@ -30,12 +36,14 @@ type MoviePageParams = {
 
 
 const MoviePage = ({ params }: MoviePageParams) => {
-  let a = "clpy5pfb400003nj1j3un3652";
   const [movie, setMovie] = useState<Movie | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [content, setContent] = useState('');
   const [rating, setRating] = useState(0);
+  const { data: session } = useSession();
+
+  let loggedUserId = "unknown";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,6 +77,8 @@ const MoviePage = ({ params }: MoviePageParams) => {
   };
 
   const addReview = async () => {
+    console.log(movie);
+    console.log(movie?.genres);
     try {
       // Make a POST request to the API endpoint
       const response = await fetch(`/api/review?userId=clpy5pfb400003nj1j3un3652&movieId=${params.id}&rating=${rating}&content=${content}`, {
@@ -105,38 +115,42 @@ const MoviePage = ({ params }: MoviePageParams) => {
   return (
       <div className="mx-auto my-8 p-8 dark:bg-neutral-800 shadow-md rounded-md overflow-y-auto">
         {movie && (
-            <MovieDetails movie={movie} />
+            <div>
+              <MovieDetails movie={movie}/>
+            </div>
         )}
 
-      {/* Reviews Section */}
-      <div className="mt-8">
-        <h2 className="text-2xl font-bold mb-4">Movie Reviews</h2>
+        {/* Reviews Section */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">Movie Reviews</h2>
 
-        {/* Add Review Button */}
-        <div className="mt-4">
-          <button
-            className="dark:bg-stone-500 text-white py-2 text-xl px-4 rounded"
-            onClick={openDialog}
-          >
-            Add Review
-          </button>
-        </div>
+          {/* Add Review Button */}
+          <div className="mt-4 relative">
+            <button
+                className={`dark:bg-stone-500 text-white py-2 text-xl px-4 rounded ${loggedUserId === "unknown" ? 'opacity-50 cursor-not-allowed' : ''}`}
+                onClick={openDialog}
+                disabled={loggedUserId === "unknown"}
+                title={loggedUserId === "unknown" ? "Please log in to add reviews" : ""}
+            >
+              Add Review
+            </button>
+          </div>
 
-       {/* Add Review Dialog */}
-        <AddReviewDialog
-            isOpen={isDialogOpen}
-            onClose={() => setDialogOpen(false)}
-            onAddReview={addReview}
-            content={content}
-            rating={rating}
-            onContentChange={(newContent) => setContent(newContent)}
-            onRatingChange={(newRating) => setRating(newRating)}
+          {/* Add Review Dialog */}
+          <AddReviewDialog
+              isOpen={isDialogOpen}
+              onClose={() => setDialogOpen(false)}
+              onAddReview={addReview}
+              content={content}
+              rating={rating}
+              onContentChange={(newContent) => setContent(newContent)}
+              onRatingChange={(newRating) => setRating(newRating)}
         />
 
         {/* Display Reviews */}
-        {reviews.map((review) => (
-            <MovieReview key={review.id} review={review} userId={a} />
-        ))}
+        {movie && (reviews.map((review) => (
+            <MovieReview key={review.id} review={review} userId={loggedUserId} />
+        )))}
       </div>
     </div>
   );
