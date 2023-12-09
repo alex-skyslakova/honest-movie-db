@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import {Navbar} from "@/components/Navbar";
+import SideBar from "@/components/SideBar";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,8 +20,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
       <Navbar/>
-        <main className="flex min-h-screen flex-col bg-white dark:bg-black">
-          {children}
+        <main className="flex min-h-screen flex-row bg-white dark:bg-black">
+            <SideBar/>
+            <div className="flex flex-col">
+                {children}
+            </div>
         </main>
       <footer className="py-2 px-4 mt-auto text-right dark:bg-stone-600">React project 2023</footer>
       </body>
