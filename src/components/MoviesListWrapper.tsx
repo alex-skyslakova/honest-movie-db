@@ -12,14 +12,15 @@ export const MoviesListWrapper = ({fn}:{fn: (opts: MovieOptions) => Promise<Movi
         setGetFunction({_: fn})
     }, [])
     return (
-        <MoviesContextProvider>
-            <MoviesSearchBar/>
-            <Suspense fallback={
-                <div className="animate-pulse rounded-2xl bg-neutral-100 dark:bg-neutral-800 w-full h-screen"/>
-            }>
-                <MoviesResult fn={getFunction._}/>
-            </Suspense>
-        </MoviesContextProvider>
+            <>
+                <MoviesSearchBar/>
+                <Suspense fallback={
+                    <div className="animate-pulse rounded-2xl bg-neutral-100 dark:bg-neutral-800 w-full h-screen"/>
+                }>
+                    <MoviesResult fn={getFunction._}/>
+                </Suspense>
+            </>
+
     )
 }
 
