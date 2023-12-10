@@ -1,3 +1,5 @@
+'use client'
+
 // src/components/BadgeList.tsx
 import { Badge } from '@/model/badge';
 import React, { useState } from 'react';
@@ -21,7 +23,7 @@ const BadgeList: React.FC<BadgeListProps> = ({ badges }) => {
     <div className="mb-8">
       <h2 className="text-lg font-semibold mb-8 text-center mt-8">Badges</h2>
       <div className="flex flex-wrap justify-center border dark:bg-stone-600 rounded shadow-md p-4">
-        {badges.map((badge) => (
+        {(badges ?? []).map((badge) => (
           <div
             key={badge.id}
             className="relative m-0.5 md:m-2.5 lg:m-5 position-relative"

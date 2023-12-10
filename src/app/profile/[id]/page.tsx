@@ -1,47 +1,26 @@
-"use client";
-
 // src/app/profile/pages.tsx
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import BadgeList from '@/components/BadgeList';
-import { useParams } from 'next/navigation';
 import { User } from '@/model/user';
 import {UserNameField} from "@/components/UserNameField";
+import {getServerAuthSession} from "@/server/auth";
+import {getUserById, updateUser} from "@/api/db/user";
+import {LoginStatus} from "@/app/LoginStatus";
 
-// Dummy user for testing
-const dummyUser = {
-  id: 1,
-  name: 'John Doe',
-  badges: [
-    { id: 1, name: 'This user\'s average rating is higher than 80%', image: '/img/badges/positive-vote.png' },
-    { id: 2, name: 'This user\'s average rating is lower than 20%', image: '/img/badges/negative-vote.png' },
-    { id: 3, name: 'This user has reviewed over 20 movies!', image: '/img/badges/silver-medal.png' },
-  ],
-  email: 'john.doe@example.com',
-  password: '********',
-};
 
-const ProfilePage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const fetchUserAndBadges = async () => {
-      try {
-        setUser(dummyUser);
-      } catch (error) {
-        console.error('Error fetching user and badges:', error);
-      }
-    };
-
-    if (id) {
-      fetchUserAndBadges();
-    }
-  }, [id]);
-
-  const handleSaveClick = async (editedName: string) => {
-    // Save the edited name and exit editing mode
-    setUser((prevUser) => ({ ...prevUser, name: editedName }));
-  };
+const ProfilePage: React.FC = async ({ params }: { params: { id: string } }) => {
+  const { id } = params;
+  const status = await getServerAuthSession();
+  if (!status)
+    return (
+        <div className="flex flex-col h-4/5 w-4/5 dark:bg-neutral-800 m-auto p-5 items-center justify-center gap-y-4 rounded-xl">
+            <div>
+                To view profile pages (yours or anyone else's) you need to sign in
+            </div>
+            <LoginStatus/>
+        </div>
+    )
+  const user: User = status?.user?.id == id ? status.user : await getUserById(id)
 
   if (!user) {
     return <div>Loading...</div>;
@@ -52,9 +31,9 @@ const ProfilePage: React.FC = () => {
       {/* Left Side */}
       <div className="flex-1 p-8 flex items-center justify-center">
         <div className="max-w-md rounded-lg p-4 flex flex-col items-center">
-          <UserNameField userName={user.name} saveFunc={handleSaveClick}/>
+          <UserNameField userName={user.name} saveFunc={saveUserName(id)}/>
           <p className="text-sm mb-4">{user.email}</p>
-          <BadgeList badges={dummyUser.badges}/>
+          <BadgeList badges={user.badges}/>
         </div>
       </div>
 
@@ -73,3 +52,10 @@ const ProfilePage: React.FC = () => {
 };
 
 export default ProfilePage;
+
+function saveUserName(id: string): (newName: string) => Promise<void> {
+  return async (name: string) => {
+    'use server'
+    await updateUser({id, name});
+  }
+}
