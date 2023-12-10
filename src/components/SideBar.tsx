@@ -1,33 +1,60 @@
-import SideBarItem from "@/components/SideBarItem";
 import React from "react";
-import {usePathname} from "next/navigation";
 import {Movie} from ".prisma/client";
-import MovieOfThePeriod from "@/components/MovieOfThePeriod";
-import {getMovies as getMoviesFromDb} from "@/api/db/movie";
-import {MovieOptions} from "@/model/movie";
+import {countMovies, getMovies as getMoviesFromDb} from "@/api/db/movie";
+import {getReviewsByUserId} from "@/api/db/review";
 import {SideBarWrapper} from "@/components/SideBarWrapper";
 
 
 const SideBar = async () => {
-
-    const movieOfTheWeek = await getMovies( 1, 1);
-    const movie = movieOfTheWeek.pop() as Movie;
-    const movieOfTheDay = {
-        id: 567,
-        title: "The Matrix",
-        description: "A sci-fi classic about an alternate reality.",
-        image: "/img/movies/phantom-of-the-opera.png",
-        rating: 90,
-    } as Movie;
+    const userId = 'clpy3nf4d00003iuxnufepjyv';
+    const movieOfTheWeek = await getMovieOfTheWeek();
+    const movieOfTheDay = await getMovieOfTheDay(userId);
     return (
-        <SideBarWrapper  movieOfTheWeek={movie} movieOfTheDay={movie}/>
+        <SideBarWrapper  movieOfTheWeek={movieOfTheWeek} movieOfTheDay={movieOfTheDay}/>
     );
 };
 
-async function getMovies(page: number, pageSize: number): Promise<Movie[]> {
+const getRandomElement = (list: any[]) => {
+    const randomIndex = Math.floor(Math.random() * list.length);
+    return list[randomIndex];
+};
+
+async function getMovieOfTheWeek(): Promise<Movie> {
     'use server'
-    const movies = await getMoviesFromDb({page: page, pageSize: pageSize})
-    return movies as Movie[]
+    const movies = await getMoviesFromDb({page: 1, pageSize: Math.min(await countMovies({page: 1, pageSize: 1000}), 1000)});
+    const topMovies = movies.filter(movie => movie.rating >= 80);
+    if (topMovies.length == 0) {
+        return movies.sort((a, b) => b.rating - a.rating).pop() as Movie;
+    }
+    return getRandomElement(topMovies);
 }
 
-export default SideBar;
+
+type FrequencyMap = {
+    [key: string]: number; // This indicates that frequencyMap can have any number of string keys, each mapping to a number
+};
+
+async function getMovieOfTheDay(userId: string): Promise<Movie> {
+    // based on the user's most frequent genre, get a random movie from that genre the user hasn't seen
+    // if all seen (=reviewed), return random movie from that genre
+    // if no reviews, use week selection criteria to pick movie
+    'use server'
+    const reviews = await getReviewsByUserId(userId, 1, 500);
+    if (reviews.length == 0) {
+        return getMovieOfTheWeek();
+    }
+    const genres = reviews.map(review => review.movie.genres).flat();
+    const frequencyMap = genres.reduce((acc: FrequencyMap, value) => {
+        acc[value.name] = (acc[value.id] || 0) + 1;
+        return acc;
+    }, {});
+    const mostFreqValue = Object.keys(frequencyMap).reduce((a, b) => frequencyMap[a] > frequencyMap[b] ? a : b);
+    const movies = await getMoviesFromDb({page: 1, pageSize: 500, genreId: parseInt(mostFreqValue)})
+    const notSeenMovies = movies.filter(movie => !reviews.map(review => review.movieId).includes(movie.id));
+    if (notSeenMovies.length == 0) {
+        return getRandomElement(movies);
+    }
+    return getRandomElement(notSeenMovies);
+}
+
+export default SideBar

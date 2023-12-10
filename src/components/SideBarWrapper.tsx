@@ -21,9 +21,15 @@ export const SideBarWrapper = (props: SideBarWrapperProps) => {
               {props.movieOfTheDay ? <MovieOfThePeriod {...props.movieOfTheDay}/> : <div>No movie of the week</div>}
           </SideBarItem>
 
-          <SideBarItem title={"Movie of the Day"}>
+          {props.movieOfTheDay?.id !== props.movieOfTheWeek?.id ?
+              <SideBarItem title={"Movie of the Day"}>
               {props.movieOfTheWeek ? <MovieOfThePeriod {...props.movieOfTheWeek}/> : <div>No movie of the day</div>}
-          </SideBarItem>
+              </SideBarItem>
+              :
+              <div className="sidebar-item flex flex-col items-center p-4 mb-4">
+                  <h2 className="text-lg font-semibold mb-4">Add reviews to get personalized pick!</h2>
+              </div>
+          }
       </aside>
     );
 }
