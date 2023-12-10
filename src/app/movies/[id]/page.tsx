@@ -51,7 +51,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch movie details from the API
+        // Fetch movie from the API
         const movieResponse = await fetch(`/api/movie?movieId=${params.id}`);
         const movieData = await movieResponse.json();
         setMovie(movieData);
@@ -68,8 +68,6 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
         const reviewsData = await reviewsResponse.json();
         setReviews(reviewsData);
 
-
-        // Data has been successfully loaded
         setLoading(false);
       } catch (error) {
         setError("Movie with given id does not exist");
@@ -87,14 +85,12 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
 
   const closeDialog = () => {
     setDialogOpen(false);
-    // Clear form fields when closing the dialog
     setContent('');
     setRating(0);
   };
 
   const addReview = async () => {
     try {
-      // Make a POST request to the API endpoint
       const response = await fetch(`/api/review?userId=clpy5pfb400003nj1j3un3652&movieId=${params.id}&rating=${rating}&content=${content}`, {
         method: 'POST',
         headers: {
@@ -102,22 +98,15 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
         },
       });
   
-      // Check if the request was successful (status code 2xx)
+      // Check if the request was successful
       if (response.ok) {
-        // Parse the response JSON
         const newReview = await response.json();
-  
-        // Handle the response as needed
-        console.log('Review added successfully:', newReview);
-  
-        // Update the reviews state with the new review
         setReviews([...reviews, newReview]);
         closeDialog();
 
         await updateBadges(loggedUserId);
 
       } else {
-        // Handle the error case
         console.error('Error adding review:', response.statusText);
       }
     } catch (error) {
@@ -136,7 +125,6 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
   }
 
   if (error) {
-    // Display error message or redirect to the error page
     return (
         <div className="flex justify-center items-center min-h-screen text-red-500 text-4xl">
           Error: {error}
@@ -195,7 +183,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
                     key={review.id}
                     review={review}
                     userId={loggedUserId}
-                    onRemoveReview={removeReview} // Pass the removeReview function
+                    onRemoveReview={removeReview}
                 />
             ))}
           </div>

@@ -38,7 +38,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ movie } ) => {
                         </div>
                     ))}
                 </div>
-                {/* Description Box */}
+                {/* Description */}
                 <div className="dark:bg-stone-700 p-4 rounded-md mb-8 w-full">
                     <p className="text-lg text-white">{movie.description}</p>
                 </div>

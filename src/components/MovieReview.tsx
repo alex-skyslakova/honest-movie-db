@@ -16,16 +16,13 @@ interface MovieReviewProps {
   onRemoveReview: (reviewId: number) => void;
 }
 
-// src/components/MovieReview.tsx
-// ... (other imports and interfaces remain the same)
-
 const MovieReview: React.FC<MovieReviewProps> = ({ review, userId, onRemoveReview }) => {
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
   const [userVote, setUserVote] = useState<boolean | null>(null);
   const [userDetails, setUserDetails] = useState<User | null>(null);
   const [voted, setVoted] = useState(false);
-  let userV: Vote | null = null;  // Declare userV in the outer scope
+  let userVoteInstance: Vote | null = null;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,8 +36,8 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review, userId, onRemoveRevie
         if (votes) {
           likesCount = votes.filter((vote: { isLike: boolean }) => vote.isLike).length;
           dislikesCount = votes.filter((vote: { isLike: boolean }) => !vote.isLike).length;
-          userV = votes.find((vote: { userId: string }) => vote.userId === userId);
-          setUserVote(userV ? userV.isLike : null);
+          userVoteInstance = votes.find((vote: { userId: string }) => vote.userId === userId);
+          setUserVote(userVoteInstance ? userVoteInstance.isLike : null);
         }
 
         setLikes(likesCount);
@@ -60,8 +57,6 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review, userId, onRemoveRevie
   const handleRemoveReview = async () => {
     console.log('Removing Review:', review.id);
     try {
-      // Call the API or perform any action to remove the review
-      // You might want to add confirmation dialogs or error handling here
       await fetch(`/api/review?reviewId=${review.id}`, {
         method: 'DELETE',
         headers: {
@@ -85,20 +80,19 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review, userId, onRemoveRevie
 
       if (voted) {
         // If the user has already voted, update the existing vote
-        await fetch(`/api/vote?userId=${userId}&reviewId=${review.id}&isLike=${isLike}&voteId=${userV?.id}`, {
+        await fetch(`/api/vote?userId=${userId}&reviewId=${review.id}&isLike=${isLike}&voteId=${userVoteInstance?.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
         });
 
-        // Update the user vote
         setUserVote(isLike);
 
         // Update counts based on the previous vote
-        if (userV?.isLike === true) {
+        if (userVoteInstance?.isLike === true) {
           newLikes -= 1;
-        } else if (userV?.isLike === false) {
+        } else if (userVoteInstance?.isLike === false) {
           newDislikes -= 1;
         }
 
@@ -183,7 +177,6 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review, userId, onRemoveRevie
                   onClick={handleRemoveReview}
                   title="Delete Review"
               >
-                {/* Use the delete icon */}
                 <img src="/img/icons/delete.png" alt="Delete" className="w-6 h-6" />
               </button>
           )}

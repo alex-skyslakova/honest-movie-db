@@ -17,15 +17,16 @@ const reviewSchema = z.object({
     rating: z.number().min(0).max(100),
 });
 
-const AddReviewDialog: React.FC<AddReviewDialogProps> = ({
-                                                             isOpen,
-                                                             onClose,
-                                                             onAddReview,
-                                                             content,
-                                                             rating,
-                                                             onContentChange,
-                                                             onRatingChange,
-                                                         }) => {
+const AddReviewDialog: React.FC<AddReviewDialogProps> = (
+    {
+        isOpen,
+        onClose,
+        onAddReview,
+        content,
+        rating,
+        onContentChange,
+        onRatingChange,
+    }) => {
     const [validationError, setValidationError] = useState<string | null>(null);
 
     const calculateColor = (): string => {
@@ -40,17 +41,10 @@ const AddReviewDialog: React.FC<AddReviewDialogProps> = ({
 
     const handleSubmit = () => {
         try {
-            // Validate the input using the schema
             reviewSchema.parse({ content, rating });
-
-            // If validation passes, call the onAddReview function
             onAddReview(content, rating);
-
-            // Optionally, you can clear the form fields and close the dialog here
             onClose();
         } catch (error) {
-            // Handle validation errors
-            console.error('Validation error:', error.errors);
             setValidationError('Content must be between 1 and 400 characters');
         }
     };
