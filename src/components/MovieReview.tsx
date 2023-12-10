@@ -77,8 +77,6 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review, userId, onRemoveRevie
       let newLikes = likes;
       let newDislikes = dislikes;
 
-      console.log(voted);
-
       if (voted) {
         // If the user has already voted, update the existing vote
         await fetch(`/api/vote?userId=${userId}&reviewId=${review.id}&isLike=${isLike}&voteId=${userVoteInstance?.id}`, {
@@ -177,11 +175,11 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review, userId, onRemoveRevie
           {/* Render Remove Review button only if the user is the author of the review */}
           {userId === review.userId && (
               <button
-                  className="mt-2 p-2 border rounded-md bg-red-800 text-white"
+                  className="rounded-md"
                   onClick={handleRemoveReview}
                   title="Delete Review"
               >
-                <img src="/img/icons/delete.png" alt="Delete" className="w-6 h-6" />
+                <img src="/img/icons/delete.png" alt="Delete" className="w-14 h-12" />
               </button>
           )}
         </div>

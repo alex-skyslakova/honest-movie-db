@@ -73,7 +73,6 @@ const updateBadges = async (userId: string) => {
         const reviews = await reviewsResponse.json();
 
         const averageRating = calculateAverageRating(reviews);
-        console.log(averageRating);
         const badges: number[] = [];
 
         if (averageRating > 80) {
@@ -95,11 +94,10 @@ const updateBadges = async (userId: string) => {
         if (reviews.length > 50) {
             badges.push(3);
         }
-        await addBadgeToUser(userId, badges[0]);
-        // Add the badges to the user
-        // for (const badge of badges) {
-        //     await addBadgeToUser(userId, badge);
-        // }
+
+        for (const badge of badges) {
+            await addBadgeToUser(userId, badge);
+        }
     } catch (error) {
         console.error('Error updating badges:', error);
     }

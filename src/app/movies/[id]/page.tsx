@@ -5,10 +5,10 @@ import MovieReview from '@/components/MovieReview';
 import MovieDetails from '@/components/MovieDetails';
 import AddReviewDialog from '@/components/AddReviewDialog';
 import { Genre } from '@/model/genre';
-import { Vote } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import MoviePageLoader from "@/app/MoviePageLoader";
 import { updateBadges } from "@/app/movies/[id]/badgeService";
+import {Vote} from "@prisma/client";
 
 interface Review {
   id: number;
@@ -43,7 +43,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  let loggedUserId = session?.user?.id || "unknown";
+  let loggedUserId = session?.user?.id || '';
   const userHasReviewed = reviews.some(
       (review) => review.userId == loggedUserId && review.movieId == params.id
   );
@@ -57,7 +57,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
         setMovie(movieData);
 
         if (movieData.isNull) {
-          setError("Movie with the given id does not exist");
+          setError('Movie with the given id does not exist');
           setLoading(false);
           return;
         }
@@ -69,7 +69,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
 
         setLoading(false);
       } catch (error) {
-        setError("Movie with the given id does not exist");
+        setError('Movie with the given id does not exist');
         setLoading(false);
         return;
       }
@@ -122,7 +122,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
 
   const addReview = async () => {
     try {
-      const response = await fetch(`/api/review?userId=clpy5pfb400003nj1j3un3652&movieId=${params.id}&rating=${rating}&content=${content}`, {
+      const response = await fetch(`/api/review?userId=${loggedUserId}&movieId=${params.id}&rating=${rating}&content=${content}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -156,21 +156,21 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
 
   if (error) {
     return (
-        <div className="flex justify-center items-center min-h-screen text-red-500 text-4xl">
+        <div className='flex justify-center items-center min-h-screen text-red-500 text-4xl'>
           Error: {error}
         </div>
     );
   } else {
     return (
-        <div className=" w-full mx-auto my-8 ml-8 mr-8 p-8 dark:bg-neutral-800 shadow-md rounded-md overflow-y-auto">
+        <div className=' w-full mx-auto my-8 ml-8 mr-8 p-8 dark:bg-neutral-800 shadow-md rounded-md overflow-y-auto'>
           {movie && (
               <div>
                 <MovieDetails movie={movie} />
               </div>
           )}
 
-          <div className="mt-8">
-            <h2 className="text-2xl font-bold mb-4">Movie Reviews</h2>
+          <div className='mt-8'>
+            <h2 className='text-2xl font-bold mb-4'>Movie Reviews</h2>
 
             <div className="mt-4 relative">
               <button
@@ -184,7 +184,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
                         ? undefined
                         : openDialog
                   }
-                  disabled={userHasReviewed || loggedUserId === 'unknown'}
+                  disabled={userHasReviewed || loggedUserId === ''}
                   title={
                     userHasReviewed
                         ? 'You already reviewed this movie'

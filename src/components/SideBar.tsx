@@ -13,8 +13,6 @@ type MoviesState = {
 }
 
 const SideBar = () => {
-    const pathname = usePathname();
-    const sidebarWidth = pathname === '/' || pathname === null ? '20%' : '20%';
     const userId = useSession()?.data?.user?.id || null;
     const [movies, setMovies] = useState<MoviesState>({
         movieOfTheDay: undefined,
@@ -33,7 +31,7 @@ const SideBar = () => {
     return (
         <aside
             className="sidebar bg-stone-100 dark:bg-stone-800 hidden md:flex flex-col h-full"
-            style={{ width: sidebarWidth, position: 'fixed', overflowY: 'auto' }}
+            style={{ width: '20%', position: 'fixed', overflowY: 'auto' }}
         >
             <style jsx>{`
                 /* Custom scrollbar styles */
