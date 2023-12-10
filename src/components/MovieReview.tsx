@@ -1,7 +1,8 @@
 // src/components/MovieReview.tsx
 import React, { useState, useEffect } from 'react';
 import RatingMovie from './RatingMovie';
-import { User } from '@prisma/client';
+import {User, Vote} from '@prisma/client';
+
 
 interface MovieReviewProps {
   review: {
@@ -11,21 +12,25 @@ interface MovieReviewProps {
     rating: number;
     movieId: number;
   };
-  userId: string; // Add userId as a prop
+  userId: string;
+  onRemoveReview: (reviewId: number) => void;
 }
 
-const MovieReview: React.FC<MovieReviewProps> = ({ review, userId }) => {
+// src/components/MovieReview.tsx
+// ... (other imports and interfaces remain the same)
+
+const MovieReview: React.FC<MovieReviewProps> = ({ review, userId, onRemoveReview }) => {
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
-  const [userVote, setUserVote] = useState<boolean | null>(null); // Indicates if the user has voted
+  const [userVote, setUserVote] = useState<boolean | null>(null);
   const [userDetails, setUserDetails] = useState<User | null>(null);
+  const [voted, setVoted] = useState(false);
+  let userV: Vote | null = null;  // Declare userV in the outer scope
 
   useEffect(() => {
-    // Fetch likes, dislikes, and user vote for the review
     const fetchData = async () => {
       try {
         const response = await fetch(`/api/vote?reviewId=${review.id}`);
-
         const votes = await response.json();
 
         let likesCount = 0;
@@ -34,66 +39,100 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review, userId }) => {
         if (votes) {
           likesCount = votes.filter((vote: { isLike: boolean }) => vote.isLike).length;
           dislikesCount = votes.filter((vote: { isLike: boolean }) => !vote.isLike).length;
-          const userVote = votes.find((vote: { userId: string }) => vote.userId === userId);
-          setUserVote(userVote ? userVote.isLike : null);
+          userV = votes.find((vote: { userId: string }) => vote.userId === userId);
+          setUserVote(userV ? userV.isLike : null);
         }
 
         setLikes(likesCount);
         setDislikes(dislikesCount);
 
-        // Check if the user has voted for this review
-
         const user = await fetch(`/api/user?userId=${review.userId}`);
         const userData = await user.json();
         setUserDetails(userData);
-
       } catch (error) {
         console.error('Error fetching data:', error);
       }
-
     };
 
     fetchData();
   }, [review.id, userId]);
 
-  const handleLike = async () => {
-    console.log("Details: ", JSON.stringify(userDetails));
-    if (userVote !== true) {
-      try {
-        // Send a request to post a new vote with isLike=true
-        await fetch(`/api/vote?userId=${userId}&reviewId=${review.id}&isLike=true`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+  const handleRemoveReview = async () => {
+    console.log('Removing Review:', review.id);
+    try {
+      // Call the API or perform any action to remove the review
+      // You might want to add confirmation dialogs or error handling here
+      await fetch(`/api/review?reviewId=${review.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-        // Update the likes count and user vote
-        setLikes(likes + 1);
-        setUserVote(true);
-      } catch (error) {
-        console.error('Error liking the review:', error);
-      }
+      // Notify the parent component to update the UI
+      onRemoveReview(review.id);
+    } catch (error) {
+      console.error('Error removing review:', error);
     }
   };
 
-  const handleDislike = async () => {
-    if (userVote !== false) {
-      try {
-        // Send a request to post a new vote with isLike=false
-        await fetch(`/api/vote?userId=${userId}&reviewId=${review.id}&isLike=false`, {
+  const handleVote = async (isLike: boolean) => {
+    try {
+      let newLikes = likes;
+      let newDislikes = dislikes;
+
+      console.log(voted);
+
+      if (voted) {
+        // If the user has already voted, update the existing vote
+        await fetch(`/api/vote?userId=${userId}&reviewId=${review.id}&isLike=${isLike}&voteId=${userV?.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        // Update the user vote
+        setUserVote(isLike);
+
+        // Update counts based on the previous vote
+        if (userV?.isLike === true) {
+          newLikes -= 1;
+        } else if (userV?.isLike === false) {
+          newDislikes -= 1;
+        }
+
+        // Update counts based on the new vote
+        if (isLike) {
+          newLikes += 1;
+        } else {
+          newDislikes += 1;
+        }
+      } else {
+        // If the user hasn't voted yet, create a new vote
+        await fetch(`/api/vote?userId=${userId}&reviewId=${review.id}&isLike=${isLike}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
         });
 
-        // Update the dislikes count and user vote
-        setDislikes(dislikes + 1);
-        setUserVote(false);
-      } catch (error) {
-        console.error('Error disliking the review:', error);
+        // Update the user vote and counts
+        setUserVote(isLike);
+        if (isLike) {
+          newLikes += 1;
+        } else {
+          newDislikes += 1;
+        }
+
+        setVoted(true);
       }
+
+      // Update the state with the new counts
+      setLikes(newLikes);
+      setDislikes(newDislikes);
+    } catch (error) {
+      console.error('Error voting:', error);
     }
   };
 
@@ -104,17 +143,15 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review, userId }) => {
           <p className=" mb-7 mt-2">{review.content}</p>
         </div>
 
-        {/* Rating (moved to the bottom left) */}
         <p className="absolute bottom-2 left-2 text-xl font-bold ml-2">
           Rating: <RatingMovie value={review.rating} />
         </p>
 
-        {/* Like and Dislike Icons */}
         <div className="flex flex-col items-end ml-4 w-1/5">
           <div className="flex mt-4">
             <button
-                className={`mr-2 p-2 border rounded-md ${likes ? 'bg-green-500' : 'bg-gray-600'}`}
-                onClick={handleLike}
+                className={`mr-2 p-2 border rounded-md ${userVote === true ? 'bg-green-500' : 'bg-gray-600'}`}
+                onClick={() => handleVote(true)}
             >
               <img
                   src="/img/icons/like.png"
@@ -123,8 +160,8 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review, userId }) => {
               />
             </button>
             <button
-                className={`p-2 border rounded-md ${dislikes ? 'bg-red-500' : 'bg-gray-600'}`}
-                onClick={handleDislike}
+                className={`p-2 border rounded-md ${userVote === false ? 'bg-red-500' : 'bg-gray-600'}`}
+                onClick={() => handleVote(false)}
             >
               <img
                   src="/img/icons/dislike.png"
@@ -134,11 +171,20 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review, userId }) => {
             </button>
           </div>
 
-          {/* Likes and Dislikes Counts */}
           <div className="mt-2 flex flex-col">
             <span className="mr-4">Likes: {likes}</span>
             <span>Dislikes: {dislikes}</span>
           </div>
+
+          {/* Render Remove Review button only if the user is the author of the review */}
+          {userId === review.userId && (
+              <button
+                  className="mt-2 p-2 border rounded-md bg-red-500 text-white"
+                  onClick={handleRemoveReview}
+              >
+                Remove Review
+              </button>
+          )}
         </div>
       </div>
   );

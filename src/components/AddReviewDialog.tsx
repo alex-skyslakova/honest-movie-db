@@ -1,5 +1,6 @@
 // components/AddReviewDialog.tsx
-import React from 'react';
+import React, { useState } from 'react';
+import { z } from 'zod';
 
 interface AddReviewDialogProps {
     isOpen: boolean;
@@ -11,24 +12,53 @@ interface AddReviewDialogProps {
     onRatingChange: (rating: number) => void;
 }
 
-const AddReviewDialog: React.FC<AddReviewDialogProps> = (
-    {
-        isOpen,
-        onClose,
-        onAddReview,
-        content,
-        rating,
-        onContentChange,
-        onRatingChange,
-    }) => {
+const reviewSchema = z.object({
+    content: z.string().min(1).max(400),
+    rating: z.number().min(0).max(100),
+});
+
+const AddReviewDialog: React.FC<AddReviewDialogProps> = ({
+                                                             isOpen,
+                                                             onClose,
+                                                             onAddReview,
+                                                             content,
+                                                             rating,
+                                                             onContentChange,
+                                                             onRatingChange,
+                                                         }) => {
+    const [validationError, setValidationError] = useState<string | null>(null);
+
     const calculateColor = (): string => {
-        if (rating === 0) return "accent-gray-500";
-        else if (rating < 20) return "accent-red-800";
-        else if (rating < 35) return "accent-red-600";
-        else if (rating < 50) return "accent-orange-400";
-        else if (rating < 70) return "accent-orange-300";
-        else if (rating < 90) return "accent-lime-500";
-        return "accent-lime-400";
+        if (rating === 0) return 'accent-gray-500';
+        else if (rating < 20) return 'accent-red-800';
+        else if (rating < 35) return 'accent-red-600';
+        else if (rating < 50) return 'accent-orange-400';
+        else if (rating < 70) return 'accent-orange-300';
+        else if (rating < 90) return 'accent-lime-500';
+        return 'accent-lime-400';
+    };
+
+    const handleSubmit = () => {
+        try {
+            // Validate the input using the schema
+            reviewSchema.parse({ content, rating });
+
+            // If validation passes, call the onAddReview function
+            onAddReview(content, rating);
+
+            // Optionally, you can clear the form fields and close the dialog here
+            onClose();
+        } catch (error) {
+            // Handle validation errors
+            console.error('Validation error:', error.errors);
+            setValidationError('Content must be between 1 and 400 characters');
+        }
+    };
+
+    const handleContentChange = (newContent: string) => {
+        // Clear validation error when content changes
+        setValidationError(null);
+        onContentChange(newContent);
     };
 
     return (
@@ -41,17 +71,22 @@ const AddReviewDialog: React.FC<AddReviewDialogProps> = (
                         <form>
                             {/* Content */}
                             <div className="mb-4">
-                                <label htmlFor="content" className="block text-sm font-medium  text-gray-700">
+                                <label htmlFor="content" className="block text-sm font-medium text-gray-700">
                                     Content
                                 </label>
                                 <textarea
                                     id="content"
                                     name="content"
                                     rows={4}
-                                    className="dark:bg-stone-300 mt-1 p-2 w-full border rounded-md"
+                                    className={`dark:bg-stone-300 mt-1 p-2 w-full border rounded-md ${
+                                        validationError ? 'border-red-500' : ''
+                                    }`}
                                     value={content}
-                                    onChange={(e) => onContentChange(e.target.value)}
+                                    onChange={(e) => handleContentChange(e.target.value)}
                                 />
+                                {validationError && (
+                                    <p className="mt-1 text-sm text-red-500">{validationError}</p>
+                                )}
                             </div>
 
                             {/* Rating Slider */}
@@ -83,7 +118,7 @@ const AddReviewDialog: React.FC<AddReviewDialogProps> = (
                                 <button
                                     type="button"
                                     className="ml-2 dark:bg-stone-700 text-white py-2 px-4 rounded"
-                                    onClick={() => onAddReview(content, rating)}
+                                    onClick={handleSubmit}
                                 >
                                     Submit
                                 </button>

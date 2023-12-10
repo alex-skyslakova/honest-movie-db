@@ -125,6 +125,11 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
     }
   };
 
+  const removeReview = (reviewId: number) => {
+    // Update the reviews state by removing the review with the specified id
+    setReviews((prevReviews) => prevReviews.filter((review) => review.id !== reviewId));
+  };
+
   if (loading) {
     // Data is still loading, display loader
     return <MoviePageLoader />;
@@ -186,7 +191,12 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
             />
 
             {reviews.map((review) => (
-                <MovieReview key={review.id} review={review} userId={loggedUserId}/>
+                <MovieReview
+                    key={review.id}
+                    review={review}
+                    userId={loggedUserId}
+                    onRemoveReview={removeReview} // Pass the removeReview function
+                />
             ))}
           </div>
         </div>

@@ -8,38 +8,38 @@ const calculateAverageRating = (reviews: Review[]) => {
     const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
     return totalRating / reviews.length;
 };
-const removeBadgesFromUser = async (userId: string) => {
-    try {
-        // Fetch the current badges for the user
-        const currentBadgesResponse = await fetch(`/api/badge?userId=${userId}`);
-        const currentBadges = await currentBadgesResponse.json();
-
-        if (currentBadges.length === 0) {
-            console.log(`User ${userId} has no badges to remove.`);
-            return;  // No badges to remove, exit the function
-        }
-
-        const response = await fetch(`/api/badge?removeUserId=true&userId=${userId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (response.ok) {
-            console.log(`Removed ${currentBadges.length} badge(s) from user ${userId}.`);
-        } else {
-            console.error('Error removing badges from user:', response.statusText);
-        }
-    } catch (error) {
-        console.error('Error removing badges from user:', error);
-    }
-};
+// const removeBadgesFromUser = async (userId: string) => {
+//     try {
+//         // Fetch the current badges for the user
+//         const currentBadgesResponse = await fetch(`/api/badge?userId=${userId}`);
+//         const currentBadges = await currentBadgesResponse.json();
+//
+//         if (currentBadges.length === 0) {
+//             console.log(`User ${userId} has no badges to remove.`);
+//             return;  // No badges to remove, exit the function
+//         }
+//
+//         const response = await fetch(`/api/badge?removeUserId=true&userId=${userId}`, {
+//             method: 'PUT',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//         });
+//
+//         if (response.ok) {
+//             console.log(`Removed ${currentBadges.length} badge(s) from user ${userId}.`);
+//         } else {
+//             console.error('Error removing badges from user:', response.statusText);
+//         }
+//     } catch (error) {
+//         console.error('Error removing badges from user:', error);
+//     }
+// };
 
 const addBadgeToUser = async (userId: string, badgeId: number) => {
     try {
         // Remove existing badges before adding the new one
-        await removeBadgesFromUser(userId);
+        //await removeBadgesFromUser(userId);
 
         const response = await fetch(`/api/badge?addUserId=true&userId=${userId}&badgeId=${badgeId}`, {
             method: 'PUT',
