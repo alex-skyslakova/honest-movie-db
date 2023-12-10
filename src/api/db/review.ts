@@ -1,10 +1,13 @@
 import {prisma} from "@/api/db/client";
 
-const getReviewsByMovieId = async (movieId: number, page: number, pageSize: number) => {
+export const getReviewsByMovieId = async (movieId: number, page: number, pageSize: number) => {
     return prisma.review.findMany({
         where: {movieId: movieId},
         skip: (page - 1) * pageSize,
         take: pageSize,
+        include: {
+            votes: true,
+        },
     });
 }
 
@@ -90,8 +93,8 @@ export const POST_REVIEW = async (req: Request) => {
     }
     const review = {
         userId: searchParams.get('userId'),
-        movieId: searchParams.get('movieId'),
-        rating: searchParams.get('rating') ?? 0,
+        movieId: Number(searchParams.get('movieId')),
+        rating: Number(searchParams.get('rating')) ?? 0,
         content: searchParams.get('content') ?? '',
     }
 

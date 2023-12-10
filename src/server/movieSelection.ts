@@ -37,7 +37,8 @@ export async function getMovieOfTheDay(userId: string): Promise<Movie> {
         return acc;
     }, {});
     const mostFreqValue = Object.keys(frequencyMap).reduce((a, b) => frequencyMap[a] > frequencyMap[b] ? a : b);
-    const movies = await getMoviesFromDb({page: 1, pageSize: 500, genreId: parseInt(mostFreqValue)})
+    let genreId = Number.isNaN(parseInt(mostFreqValue)) ? 1 : parseInt(mostFreqValue);
+    const movies = await getMoviesFromDb({page: 1, pageSize: 500, genreId: genreId})
     const notSeenMovies = movies.filter(movie => !reviews.map(review => review.movieId).includes(movie.id));
     if (notSeenMovies.length == 0) {
         return getRandomElement(movies);
