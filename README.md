@@ -7,10 +7,10 @@
 Purpose of this project is to create a database portal where users can 
 browse movies based on their categories and ratings and write their
 own reviews to the movies which will reflect to the overall rating of the 
-movie. To write reviews and receive personalized recommendations, user's 
+movie. To write reviews and receive personalized recommendations, users 
 have to register to the portal with their discord credentials. All created
 reviews are public and will be visible to other registered and non-registered
-users. User's can view other user's profiles and see what badges they earned
+users. Users can view other user profiles and see what badges they earned
 and what movies they like the most. 
 
 ### Team members
