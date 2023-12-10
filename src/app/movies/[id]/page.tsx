@@ -8,7 +8,7 @@ import { Genre } from '@/model/genre';
 import { Vote } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import MoviePageLoader from "@/app/MoviePageLoader";
-import {updateBadges} from "@/app/movies/[id]/badgeService";
+import { updateBadges } from "@/app/movies/[id]/badgeService";
 
 interface Review {
   id: number;
@@ -57,11 +57,10 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
         setMovie(movieData);
 
         if (movieData.isNull) {
-          setError("Movie with given id does not exist");
+          setError("Movie with the given id does not exist");
           setLoading(false);
           return;
         }
-
 
         // Fetch reviews from the API
         const reviewsResponse = await fetch(`/api/review?movieId=${params.id}&page=1&pageSize=10`);
@@ -70,7 +69,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
 
         setLoading(false);
       } catch (error) {
-        setError("Movie with given id does not exist");
+        setError("Movie with the given id does not exist");
         setLoading(false);
         return;
       }
@@ -78,6 +77,12 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
 
     fetchData();
   }, [params.id]);
+
+  useEffect(() => {
+    // Update the movie's rating based on the new average
+    const newAverageRating = calculateAverageRating(reviews);
+    updateMovieRating(params.id, newAverageRating);
+  }, [reviews, params.id]);
 
   const openDialog = () => {
     setDialogOpen(true);
@@ -89,6 +94,32 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
     setRating(0);
   };
 
+  const calculateAverageRating = (reviews: Review[]): number => {
+    if (reviews.length === 0) {
+      return 0;
+    }
+
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    return totalRating / reviews.length;
+  };
+
+  const updateMovieRating = async (movieId: number, newRating: number) => {
+    try {
+      const response = await fetch(`/api/movie?movieId=${movieId}&rating=${newRating}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        console.error('Error updating movie rating:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error updating movie rating:', error);
+    }
+  };
+
   const addReview = async () => {
     try {
       const response = await fetch(`/api/review?userId=clpy5pfb400003nj1j3un3652&movieId=${params.id}&rating=${rating}&content=${content}`, {
@@ -97,15 +128,14 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
           'Content-Type': 'application/json',
         },
       });
-  
+
       // Check if the request was successful
       if (response.ok) {
         const newReview = await response.json();
-        setReviews([...reviews, newReview]);
+        setReviews((prevReviews) => [...prevReviews, newReview]);
         closeDialog();
 
         await updateBadges(loggedUserId);
-
       } else {
         console.error('Error adding review:', response.statusText);
       }
@@ -114,7 +144,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
     }
   };
 
-  const removeReview = (reviewId: number) => {
+  const removeReview = async (reviewId: number) => {
     // Update the reviews state by removing the review with the specified id
     setReviews((prevReviews) => prevReviews.filter((review) => review.id !== reviewId));
   };
@@ -130,8 +160,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
           Error: {error}
         </div>
     );
-  }
-  else {
+  } else {
     return (
         <div className="mx-auto my-8 p-8 dark:bg-neutral-800 shadow-md rounded-md overflow-y-auto">
           {movie && (
@@ -190,8 +219,6 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
         </div>
     );
   }
-
 };
-
 
 export default MoviePage;
