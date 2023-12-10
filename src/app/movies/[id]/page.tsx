@@ -8,6 +8,7 @@ import { Genre } from '@/model/genre';
 import { Vote } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import MoviePageLoader from "@/app/MoviePageLoader";
+import {updateBadges} from "@/app/movies/[id]/badgeService";
 
 interface Review {
   id: number;
@@ -42,7 +43,10 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  let loggedUserId = "unknown";
+  let loggedUserId = session?.user?.id || "unknown";
+  const userHasReviewed = reviews.some(
+      (review) => review.userId == loggedUserId && review.movieId == params.id
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,6 +67,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
         const reviewsResponse = await fetch(`/api/review?movieId=${params.id}&page=1&pageSize=10`);
         const reviewsData = await reviewsResponse.json();
         setReviews(reviewsData);
+
 
         // Data has been successfully loaded
         setLoading(false);
@@ -88,8 +93,6 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
   };
 
   const addReview = async () => {
-    console.log(movie);
-    console.log(movie?.genres);
     try {
       // Make a POST request to the API endpoint
       const response = await fetch(`/api/review?userId=clpy5pfb400003nj1j3un3652&movieId=${params.id}&rating=${rating}&content=${content}`, {
@@ -110,10 +113,9 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
         // Update the reviews state with the new review
         setReviews([...reviews, newReview]);
         closeDialog();
-  
-        // Log content and rating to console
-        console.log('Content:', content);
-        console.log('Rating:', rating);
+
+        await updateBadges(loggedUserId);
+
       } else {
         // Handle the error case
         console.error('Error adding review:', response.statusText);
@@ -151,11 +153,23 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
             <div className="mt-4 relative">
               <button
                   className={`dark:bg-stone-500 text-white py-2 text-xl px-4 rounded ${
-                      loggedUserId === 'unknown' ? 'opacity-50 cursor-not-allowed' : ''
+                      userHasReviewed || loggedUserId === 'unknown'
+                          ? 'opacity-50 cursor-not-allowed'
+                          : ''
                   }`}
-                  onClick={openDialog}
-                  disabled={loggedUserId === 'unknown'}
-                  title={loggedUserId === 'unknown' ? 'Please log in to add reviews' : ''}
+                  onClick={
+                    userHasReviewed || loggedUserId === 'unknown'
+                        ? undefined
+                        : openDialog
+                  }
+                  disabled={userHasReviewed || loggedUserId === 'unknown'}
+                  title={
+                    userHasReviewed
+                        ? 'You already reviewed this movie'
+                        : loggedUserId === 'unknown'
+                            ? 'Please log in to add reviews'
+                            : ''
+                  }
               >
                 Add Review
               </button>
@@ -172,7 +186,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
             />
 
             {reviews.map((review) => (
-                <MovieReview key={review.id} review={review} userId={loggedUserId} />
+                <MovieReview key={review.id} review={review} userId={loggedUserId}/>
             ))}
           </div>
         </div>

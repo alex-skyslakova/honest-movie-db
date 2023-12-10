@@ -3,10 +3,10 @@ import {Badge, Prisma} from ".prisma/client";
 import BadgeUncheckedCreateInput = Prisma.BadgeUncheckedCreateInput;
 
 const getBadgesByUserId = async (userId: string) => {
-    return prisma.user.findUnique({
+    return prisma.user.findMany({
         where: {id: userId},
         include: {badges: true},
-    }).badges;
+    });
 }
 
 const getBadgeById = async (badgeId: number) => {

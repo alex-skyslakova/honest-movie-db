@@ -100,8 +100,8 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review, userId }) => {
   return (
       <div className="border p-4 my-4 dark:bg-stone-700 rounded-md shadow-md flex items-start relative">
         <div className="flex-grow">
-          <p className="font-bold">User: {userDetails ? userDetails.name : review.userId}</p>
-          <p className=" mb-7 mt-2">Content: {review.content}</p>
+          <p className="font-bold">Reviewed by {userDetails ? userDetails.name : ""}:</p>
+          <p className=" mb-7 mt-2">{review.content}</p>
         </div>
 
         {/* Rating (moved to the bottom left) */}
