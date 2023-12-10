@@ -109,7 +109,6 @@ export const deleteMovie = async (movieId: number) => {
 }
 
 export const GET_MOVIE = async (req: Request) => {
-    console.log("dabong");
     const {searchParams} = new URL(req.url);
     const id = searchParams.get('movieId');
     const page = parseInt(searchParams.get('page') ?? '') ?? 1;

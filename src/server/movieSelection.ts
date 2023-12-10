@@ -36,7 +36,6 @@ export async function getMovieOfTheDay(userId: string): Promise<Movie> {
         acc[value.name] = (acc[value.id] || 0) + 1;
         return acc;
     }, {});
-    console.log("da map " + frequencyMap);
     const mostFreqValue = Object.keys(frequencyMap).reduce((a, b) => frequencyMap[a] > frequencyMap[b] ? a : b);
     let genreId = Number.isNaN(parseInt(mostFreqValue)) ? 1 : parseInt(mostFreqValue);
     const movies = await getMoviesFromDb({page: 1, pageSize: 500, genreId: genreId})
