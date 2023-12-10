@@ -179,10 +179,12 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review, userId, onRemoveRevie
           {/* Render Remove Review button only if the user is the author of the review */}
           {userId === review.userId && (
               <button
-                  className="mt-2 p-2 border rounded-md bg-red-500 text-white"
+                  className="mt-2 p-2 border rounded-md bg-red-800 text-white"
                   onClick={handleRemoveReview}
+                  title="Delete Review"
               >
-                Remove Review
+                {/* Use the delete icon */}
+                <img src="/img/icons/delete.png" alt="Delete" className="w-6 h-6" />
               </button>
           )}
         </div>
