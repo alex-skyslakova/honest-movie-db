@@ -8,7 +8,6 @@ import { Genre } from '@/model/genre';
 import { useSession } from 'next-auth/react';
 import MoviePageLoader from "@/app/MoviePageLoader";
 import { updateBadges } from "@/app/movies/[id]/badgeService";
-import {Vote} from "@prisma/client";
 
 interface Review {
   id: number;
@@ -18,7 +17,6 @@ interface Review {
   movieId: number;
   likes: number;
   dislikes: number;
-  votes: Vote[];
 }
 
 interface Movie {
