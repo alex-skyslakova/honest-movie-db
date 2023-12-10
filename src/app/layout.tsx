@@ -23,10 +23,12 @@ export default function RootLayout({
       <body className={inter.className}>
       <Navbar/>
         <main className="flex min-h-screen flex-row bg-white dark:bg-black">
-            <SideBar/>
-            <div className="flex flex-col">
-                <Providers>{children}</Providers>
-            </div>
+            <Providers>
+                <SideBar/>
+                <div className="flex flex-col">
+                    {children}
+                </div>
+            </Providers>
         </main>
       <footer className="py-2 px-4 mt-auto text-right dark:bg-stone-600">React project 2023</footer>
       </body>

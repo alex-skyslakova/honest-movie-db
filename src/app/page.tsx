@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { LoginStatus } from './LoginStatus'
 
 export default function Home() {
