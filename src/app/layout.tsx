@@ -20,11 +20,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-      <Navbar/>
-        <main className="flex min-h-screen flex-col bg-white dark:bg-black">
-            <Providers>{children}</Providers>
-        </main>
-      <footer className="py-2 px-4 mt-auto text-right dark:bg-stone-600">React project 2023</footer>
+        <Providers>
+          <Navbar/>
+            <main className="flex min-h-screen flex-col bg-white dark:bg-black">
+                {children}
+            </main>
+          <footer className="py-2 px-4 mt-auto text-right dark:bg-stone-600">React project 2023</footer>
+        </Providers>
       </body>
     </html>
   )
