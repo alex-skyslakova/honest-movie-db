@@ -3,6 +3,7 @@
 'use client';
 
 import { signIn, signOut, useSession } from 'next-auth/react';
+import Link from "next/link";
 
 export const LoginStatus = () => {
   const { data, status } = useSession();
@@ -21,7 +22,9 @@ export const LoginStatus = () => {
   }
   return (
     <div className="flex gap-3 items-center">
-      Hi, {data?.user.name}
+      <Link href={`/profile/${data?.user.id}`}>
+        Hi, {data?.user.name}
+      </Link>
       <button
         onClick={() => signOut()}
         className="rounded border border-white p-3"
