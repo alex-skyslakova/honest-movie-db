@@ -52,20 +52,22 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review, userId, onRemoveRevie
   };
 
   return (
-      <div className="border p-4 my-4 dark:bg-stone-700 rounded-md shadow-md flex items-start relative">
-        <div className="flex-grow">
-          {/* Use Link to create a link to the user's profile */}
-          <Link href={`/profile/${review.userId}`}>
-            <p className="font-bold">{userDetails ? userDetails.name : ""}:</p>
-          </Link>
-          <p className="mb-7 mt-2">{review.content}</p>
+      <div className="border p-4 my-4 dark:bg-stone-700 rounded-md shadow-md relative">
+        <div className="flex items-start">
+          <div className="flex-grow">
+            {/* Use Link to create a link to the user's profile */}
+            <Link href={`/profile/${review.userId}`}>
+              <p className="font-bold">{userDetails ? userDetails.name : ""}:</p>
+            </Link>
+            <p className="mb-7 mt-2 max-w-4/5 overflow-wrap break-word">{review.content}</p>
+          </div>
         </div>
 
-        <p className="absolute bottom-2 left-2 text-xl font-bold ml-2">
-          Rating: <RatingMovie value={review.rating}/>
-        </p>
+        <div className="flex items-end justify-between mt-4">
+          <p className="text-xl font-bold ml-2">
+            Rating: <RatingMovie value={review.rating}/>
+          </p>
 
-        <div className="flex flex-col items-end ml-4 w-1/5">
           {/* Render Remove Review button only if the user is the author of the review */}
           {userId === review.userId && (
               <button
