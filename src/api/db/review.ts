@@ -11,11 +11,18 @@ export const getReviewsByMovieId = async (movieId: number, page: number, pageSiz
     });
 }
 
-const getReviewsByUserId = async (userId: string, page: number, pageSize: number) => {
+export const getReviewsByUserId = async (userId: string, page: number, pageSize: number) => {
     return prisma.review.findMany({
         where: {userId: userId},
         skip: (page - 1) * pageSize,
         take: pageSize,
+        include: {
+            movie: {
+                include: {
+                    genres: true, // Include genres related to the movie
+                }
+            },
+        },
     });
 };
 
