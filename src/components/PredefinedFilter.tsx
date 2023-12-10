@@ -4,7 +4,9 @@ import {MoviesContext} from "@/components/MoviesContextProvider";
 import Link from "next/link";
 
 type PredefinedFilterProps = {
-    genreId: number
+    genreId: number,
+    title: string,
+    description: string,
 }
 
 export const PredefinedFilter = (props: PredefinedFilterProps) => {
@@ -13,8 +15,8 @@ export const PredefinedFilter = (props: PredefinedFilterProps) => {
     const [clicked, setClicked] = useState(false)
 
     useEffect(() => {
-        console.log('clicked')
-        console.log(props.genreId)
+        if (!clicked) return;
+
         setMovieOptions({...movieOptions, genreId: props.genreId, pageNumber: 1});
         setClicked(false);
 
@@ -28,13 +30,13 @@ export const PredefinedFilter = (props: PredefinedFilterProps) => {
         onClick={() => setClicked(true)}
     >
         <h2 className={`mb-3 text-2xl font-semibold`}>
-            Romance{' '}
+            {props.title}{' '}
             <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
               -&gt;
             </span>
         </h2>
         <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
+            {props.description}
         </p>
     </Link>)
 }
