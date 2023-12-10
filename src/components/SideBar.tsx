@@ -13,10 +13,11 @@ type MoviesState = {
 }
 
 const SideBar = () => {
-    const pathname = usePathname();
-    const sidebarWidth = pathname === '/' || pathname === null ? '25%' : '15%'
     const userId = useSession()?.data?.user?.id || null;
-    const [movies, setMovies] = useState<MoviesState>({ movieOfTheDay: undefined, movieOfTheWeek: undefined });
+    const [movies, setMovies] = useState<MoviesState>({
+        movieOfTheDay: undefined,
+        movieOfTheWeek: undefined,
+    });
 
     useEffect(() => {
         async function fetchMovies() {
@@ -28,22 +29,47 @@ const SideBar = () => {
     }, [userId]);
 
     return (
-        <aside className={"sidebar bg-stone-100 dark:bg-stone-800 flex flex-col hidden md:flex "} style={{ width: sidebarWidth }}>
-            <SideBarItem title={"Movie of the Week"}>
-                {movies.movieOfTheWeek ? <MovieOfThePeriod {...movies.movieOfTheWeek}/> : <div>No movie of the week</div>}
+        <aside
+            className="sidebar bg-stone-100 dark:bg-stone-800 hidden md:flex flex-col h-full"
+            style={{ width: '20%', position: 'fixed', overflowY: 'auto' }}
+        >
+            <style jsx>{`
+                /* Custom scrollbar styles */
+                .sidebar {
+                    scrollbar-width: thin;
+                    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+                }
+
+                .sidebar:hover {
+                    scrollbar-color: rgba(0, 0, 0, 0.5) transparent;
+                }
+            `}</style>
+
+            <SideBarItem title="Movie of the Week">
+                {movies.movieOfTheWeek ? (
+                    <MovieOfThePeriod {...movies.movieOfTheWeek} />
+                ) : (
+                    <div>No movie of the week</div>
+                )}
             </SideBarItem>
-            { userId && (movies.movieOfTheDay?.id !== movies.movieOfTheWeek?.id ?
-                    <SideBarItem title={"Movie of the Day"}>
-                        {movies.movieOfTheDay ? <MovieOfThePeriod {...movies.movieOfTheDay}/> : <div>No movie of the day</div>}
+            {userId &&
+                (movies.movieOfTheDay?.id !== movies.movieOfTheWeek?.id ? (
+                    <SideBarItem title="Movie of the Day">
+                        {movies.movieOfTheDay ? (
+                            <MovieOfThePeriod {...movies.movieOfTheDay} />
+                        ) : (
+                            <div>No movie of the day</div>
+                        )}
                     </SideBarItem>
-                    :
+                ) : (
                     <div className="sidebar-item flex flex-col items-center p-4 mb-4">
-                        <h2 className="text-lg font-semibold mb-4">Add reviews to get personalized pick!</h2>
+                        <h2 className="text-lg font-semibold mb-4">
+                            Add reviews to get personalized pick!
+                        </h2>
                     </div>
-                )
-            }
+                ))}
         </aside>
     );
 };
 
-export default SideBar
+export default SideBar;
