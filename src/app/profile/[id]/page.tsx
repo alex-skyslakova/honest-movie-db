@@ -31,7 +31,7 @@ const ProfilePage: React.FC = async ({ params }: { params: { id: string } }) => 
       {/* Left Side */}
       <div className="flex-1 p-8 flex items-center justify-center">
         <div className="max-w-md rounded-lg p-4 flex flex-col items-center">
-          <UserNameField userName={user.name} saveFunc={saveUserName(id)}/>
+          <UserNameField userName={user.name} enabled={status?.user?.id == id} saveFunc={saveUserName(id)}/>
           <p className="text-sm mb-4">{user.email}</p>
           <BadgeList badges={user.badges}/>
         </div>

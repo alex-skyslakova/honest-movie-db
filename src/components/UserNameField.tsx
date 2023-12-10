@@ -2,7 +2,7 @@
 
 import React, {useState} from "react";
 
-export const UserNameField = ({userName, saveFunc}: { userName: string, saveFunc: (newName: string) => Promise<void>}) => {
+export const UserNameField = ({userName, enabled, saveFunc}: { userName: string, enabled: boolean, saveFunc: (newName: string) => Promise<void>}) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedName, setEditedName] = useState(userName);
     return (
@@ -28,12 +28,15 @@ export const UserNameField = ({userName, saveFunc}: { userName: string, saveFunc
             ) : (
                 <>
                     <h1 className="text-2xl font-bold">{editedName}</h1>
-                    <button
-                        onClick={() => setIsEditing(true)}
-                        className="ml-2 px-2 py-1 bg-blue-500 text-white rounded"
-                    >
-                        Edit
-                    </button>
+                    { enabled ?
+                        <button
+                            onClick={() => setIsEditing(true)}
+                            className="ml-2 px-2 py-1 bg-blue-500 text-white rounded"
+                        >
+                            Edit
+                        </button> :
+                        ''
+                    }
                 </>
             )}
         </div>
