@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import BadgeList from '@/components/BadgeList';
 import { useParams } from 'next/navigation';
 import { User } from '@/model/user';
+import {UserNameField} from "@/components/UserNameField";
 
 // Dummy user for testing
 const dummyUser = {
@@ -22,14 +23,11 @@ const dummyUser = {
 const ProfilePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<User | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedName, setEditedName] = useState('');
 
   useEffect(() => {
     const fetchUserAndBadges = async () => {
       try {
         setUser(dummyUser);
-        setEditedName(dummyUser.name); // Set initial editedName
       } catch (error) {
         console.error('Error fetching user and badges:', error);
       }
@@ -40,14 +38,9 @@ const ProfilePage: React.FC = () => {
     }
   }, [id]);
 
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
-
-  const handleSaveClick = () => {
+  const handleSaveClick = async (editedName: string) => {
     // Save the edited name and exit editing mode
     setUser((prevUser) => ({ ...prevUser, name: editedName }));
-    setIsEditing(false);
   };
 
   if (!user) {
@@ -59,36 +52,9 @@ const ProfilePage: React.FC = () => {
       {/* Left Side */}
       <div className="flex-1 p-8 flex items-center justify-center">
         <div className="max-w-md rounded-lg p-4 flex flex-col items-center">
-          <div className="flex items-center mb-8">
-            {isEditing ? (
-              <>
-                <input
-                  type="text"
-                  value={editedName}
-                  onChange={(e) => setEditedName(e.target.value)}
-                  className="mr-2 p-2 border rounded dark:bg-neutral-600"
-                />
-                <button
-                  onClick={handleSaveClick}
-                  className="px-4 py-2 bg-green-500 text-white rounded"
-                >
-                  Save
-                </button>
-              </>
-            ) : (
-              <>
-                <h1 className="text-2xl font-bold">{user.name}</h1>
-                <button
-                  onClick={handleEditClick}
-                  className="ml-2 px-2 py-1 bg-blue-500 text-white rounded"
-                >
-                  Edit
-                </button>
-              </>
-            )}
-          </div>
+          <UserNameField userName={user.name} saveFunc={handleSaveClick}/>
           <p className="text-sm mb-4">{user.email}</p>
-          <BadgeList badges={dummyUser.badges} />
+          <BadgeList badges={dummyUser.badges}/>
         </div>
       </div>
 
@@ -96,9 +62,9 @@ const ProfilePage: React.FC = () => {
       <div className="flex-1 flex items-center justify-center w-2/4">
         <div className="p-4 rounded-lg">
           <img
-            src="/img/profile/placeholder-profile.png"
-            alt="Profile"
-            className="w-3/4 h-3/4 align-middle object-cover rounded border dark:bg-neutral-600 shadow-lg"
+              src="/img/profile/placeholder-profile.png"
+              alt="Profile"
+              className="w-3/4 h-3/4 align-middle object-cover rounded border dark:bg-neutral-600 shadow-lg"
           />
         </div>
       </div>
