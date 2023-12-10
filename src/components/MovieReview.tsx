@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import RatingMovie from './RatingMovie';
 import {User, Vote} from '@prisma/client';
+import Link from 'next/link';
 
 
 interface MovieReviewProps {
@@ -133,12 +134,15 @@ const MovieReview: React.FC<MovieReviewProps> = ({ review, userId, onRemoveRevie
   return (
       <div className="border p-4 my-4 dark:bg-stone-700 rounded-md shadow-md flex items-start relative">
         <div className="flex-grow">
-          <p className="font-bold">Reviewed by {userDetails ? userDetails.name : ""}:</p>
-          <p className=" mb-7 mt-2">{review.content}</p>
+          {/* Use Link to create a link to the user's profile */}
+          <Link href={`/profile/${review.userId}`}>
+            <p className="font-bold">{userDetails ? userDetails.name : ""}:</p>
+          </Link>
+          <p className="mb-7 mt-2">{review.content}</p>
         </div>
 
         <p className="absolute bottom-2 left-2 text-xl font-bold ml-2">
-          Rating: <RatingMovie value={review.rating} />
+          Rating: <RatingMovie value={review.rating}/>
         </p>
 
         <div className="flex flex-col items-end ml-4 w-1/5">

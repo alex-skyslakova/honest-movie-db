@@ -162,7 +162,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
     );
   } else {
     return (
-        <div className="mx-auto my-8 p-8 dark:bg-neutral-800 shadow-md rounded-md overflow-y-auto">
+        <div className=" w-full mx-auto my-8 ml-8 mr-8 p-8 dark:bg-neutral-800 shadow-md rounded-md overflow-y-auto">
           {movie && (
               <div>
                 <MovieDetails movie={movie} />

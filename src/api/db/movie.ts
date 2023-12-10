@@ -46,6 +46,7 @@ export const getMovies = async (movieParams: movieParams) => {
         take: take,
         include: {
             genres: true,
+            reviews: true,
         },
     });
 }
