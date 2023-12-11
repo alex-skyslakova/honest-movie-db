@@ -3,11 +3,12 @@ import {Prisma, User} from ".prisma/client";
 import UserUncheckedCreateInput = Prisma.UserUncheckedCreateInput;
 import UserUncheckedUpdateInput = Prisma.UserUncheckedUpdateInput;
 
-export const getUserById = async (userId: string) => {
+export const getUserById = async (userId: string, includeReviews?: {orderBy: {rating: 'asc' | 'desc'}, take: number, include: {movie: true}}) => {
     return prisma.user.findUnique({
         where: {id: userId},
         include: {
             badges: true,
+            reviews: includeReviews,
         }
     });
 }

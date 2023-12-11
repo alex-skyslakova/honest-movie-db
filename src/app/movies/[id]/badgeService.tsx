@@ -1,4 +1,5 @@
-import {Review} from "@/model/review";
+import {Badge, Review} from ".prisma/client";
+
 
 const calculateAverageRating = (reviews: Review[]) => {
     if (reviews.length === 0) {
@@ -19,7 +20,7 @@ const removeBadgesFromUser = async (userId: string) => {
             return;  // No badges to remove, exit the function
         }
 
-        const badgeIds = currentBadges[0].badges.map(badge => badge.id);
+        const badgeIds = currentBadges[0].badges.map((badge: Badge) => badge.id);
 
         for (const badgeId of badgeIds) {
             if (badgeId != undefined) {
@@ -45,7 +46,6 @@ const removeBadgesFromUser = async (userId: string) => {
 const addBadgeToUser = async (userId: string, badgeId: number) => {
     try {
         // Remove existing badges before adding the new one
-        await removeBadgesFromUser(userId);
         if (badgeId != undefined) {
             const response = await fetch(`/api/badge?addUserId=true&userId=${userId}&badgeId=${badgeId}`, {
                 method: 'PUT',
@@ -95,6 +95,7 @@ const updateBadges = async (userId: string) => {
             badges.push(3);
         }
 
+        await removeBadgesFromUser(userId);
         for (const badge of badges) {
             await addBadgeToUser(userId, badge);
         }

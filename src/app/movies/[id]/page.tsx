@@ -4,11 +4,10 @@ import React, { useState, useEffect } from 'react';
 import MovieReview from '@/components/MovieReview';
 import MovieDetails from '@/components/MovieDetails';
 import AddReviewDialog from '@/components/AddReviewDialog';
-import { Genre } from '@/model/genre';
 import { useSession } from 'next-auth/react';
 import MoviePageLoader from "@/app/MoviePageLoader";
 import { updateBadges } from "@/app/movies/[id]/badgeService";
-import {Vote} from "@prisma/client";
+import {Genre} from ".prisma/client";
 
 interface Review {
   id: number;
@@ -16,9 +15,6 @@ interface Review {
   content: string;
   rating: number;
   movieId: number;
-  likes: number;
-  dislikes: number;
-  votes: Vote[];
 }
 
 interface Movie {
@@ -147,6 +143,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
   const removeReview = async (reviewId: number) => {
     // Update the reviews state by removing the review with the specified id
     setReviews((prevReviews) => prevReviews.filter((review) => review.id !== reviewId));
+    await updateBadges(loggedUserId);
   };
 
   if (loading) {
@@ -162,7 +159,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
     );
   } else {
     return (
-        <div className=' w-full mx-auto my-8 ml-8 mr-8 p-8 dark:bg-neutral-800 shadow-md rounded-md overflow-y-auto'>
+        <div className='mx-auto my-8 ml-8 mr-8 p-8 dark:bg-neutral-800 shadow-md rounded-md overflow-y-auto'>
           {movie && (
               <div>
                 <MovieDetails movie={movie} />
@@ -174,7 +171,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
 
             <div className="mt-4 relative">
               <button
-                  className={`dark:bg-stone-500 text-white py-2 text-xl px-4 rounded ${
+                  className={`bg-stone-100 dark:bg-stone-500 dark:text-white py-2 text-xl px-4 rounded ${
                       userHasReviewed || loggedUserId === 'unknown'
                           ? 'opacity-50 cursor-not-allowed'
                           : ''
