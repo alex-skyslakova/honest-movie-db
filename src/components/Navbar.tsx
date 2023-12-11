@@ -25,7 +25,7 @@ export const Navbar = () => {
                 )}
             </ul>
             <div className="my-auto text-black dark:text-white">
-                <LoginStatus/>
+                <LoginStatus small={true}/>
             </div>
             <button className="md:hidden flex flex-col gap-y-2 p-3" onClick={() => dialogRef.current?.show()}>
                 <div className="h-1 w-8 bg-black dark:bg-white rounded"/>
