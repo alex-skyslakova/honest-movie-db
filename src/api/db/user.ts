@@ -38,14 +38,25 @@ export const isValidUserId = async (userId: string) => {
 }
 
 export const GET_USER = async (req: Request) => {
-    const {searchParams} = new URL(req.url);
-    const userId = searchParams.get('userId');
-    if (userId && await isValidUserId(userId)) {
-        return Response.json(getUserById(userId));
-    } else {
-        return Response.json({error: 'Invalid userId'});
+    try {
+        const { searchParams } = new URL(req.url);
+        const userId = searchParams.get('userId');
+
+        if (userId && await isValidUserId(userId)) {
+            const user = await getUserById(userId);
+            if (user) {
+                return Response.json(user);
+            } else {
+                return Response.json({ error: 'User not found' }, { status: 404 });
+            }
+        } else {
+            return Response.json({ error: 'Invalid userId' }, { status: 400 });
+        }
+    } catch (error) {
+        console.error('Error in GET_USER:', error);
+        return Response.json({ error: 'Internal server error' }, { status: 500 });
     }
-}
+};
 
 export const POST_USER = async (req: Request) => {
     const {searchParams} = new URL(req.url);
