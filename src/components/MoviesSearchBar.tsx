@@ -3,10 +3,10 @@
 import {useContext} from "react";
 import {MoviesContext} from "@/components/MoviesContextProvider";
 import {useQuery} from "@tanstack/react-query";
-import {Genre} from "@/model/genre";
 import {MovieOptions} from "@/model/movie";
 import {PageSizeSelector} from "@/components/PageSizeSelector";
 import {PagesNavigationButtons} from "@/components/PagesNavigationButtons";
+import {Genre} from ".prisma/client";
 
 const getGenres = async (): Promise<Genre[]> => {
     const response = await fetch('/api/genre')

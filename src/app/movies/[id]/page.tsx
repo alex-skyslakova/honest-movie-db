@@ -4,10 +4,10 @@ import React, { useState, useEffect } from 'react';
 import MovieReview from '@/components/MovieReview';
 import MovieDetails from '@/components/MovieDetails';
 import AddReviewDialog from '@/components/AddReviewDialog';
-import { Genre } from '@/model/genre';
 import { useSession } from 'next-auth/react';
 import MoviePageLoader from "@/app/MoviePageLoader";
 import { updateBadges } from "@/app/movies/[id]/badgeService";
+import {Genre} from ".prisma/client";
 
 interface Review {
   id: number;
@@ -15,8 +15,6 @@ interface Review {
   content: string;
   rating: number;
   movieId: number;
-  likes: number;
-  dislikes: number;
 }
 
 interface Movie {
