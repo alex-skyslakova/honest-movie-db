@@ -1,7 +1,7 @@
 // components/MovieDetails.tsx
 import React from 'react';
 import RatingMovie from "@/components/RatingMovie";
-import {Genre} from "@/model/genre";
+import {Genre} from ".prisma/client";
 
 interface MovieDetailsProps {
     movie: {
