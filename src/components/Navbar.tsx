@@ -27,7 +27,7 @@ export const Navbar = () => {
             <div className="my-auto text-black dark:text-white">
                 <LoginStatus small={true}/>
             </div>
-            <button className="md:hidden flex flex-col gap-y-2 p-3" onClick={() => dialogRef.current?.show()}>
+            <button className="md:hidden flex flex-col gap-y-2 p-3 ml-auto" onClick={() => dialogRef.current?.show()}>
                 <div className="h-1 w-8 bg-black dark:bg-white rounded"/>
                 <div className="h-1 w-8 bg-black dark:bg-white rounded"/>
                 <div className="h-1 w-8 bg-black dark:bg-white rounded"/>
