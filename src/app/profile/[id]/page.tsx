@@ -29,7 +29,7 @@ const ProfilePage: React.FC = async ({params}: { params: { id: string } }) => {
     }
 
     return (
-        <div className="flex h-4/5 w-4/5 bg-neutral-100 rounded-xl dark:bg-neutral-800 m-auto">
+        <div className="flex flex-col lg:flex-row w-4/5 bg-neutral-100 rounded-xl dark:bg-neutral-800 m-auto mt-5 py-8">
             {/* Left Side */}
             <div className="flex-1 p-8 flex items-center justify-center">
                 <div className="max-w-md rounded-lg p-4 flex flex-col items-center">
@@ -67,7 +67,7 @@ const ProfilePage: React.FC = async ({params}: { params: { id: string } }) => {
             </div>
 
             {/* Right Side */}
-            <div className="flex-1 flex flex-col items-center justify-center w-2/4">
+            <div className="flex-1 flex flex-col items-center justify-center">
                 <div className="p-4 rounded-lg">
                     <img
                         src={user.image}
