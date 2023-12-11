@@ -147,6 +147,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
   const removeReview = async (reviewId: number) => {
     // Update the reviews state by removing the review with the specified id
     setReviews((prevReviews) => prevReviews.filter((review) => review.id !== reviewId));
+    await updateBadges(loggedUserId);
   };
 
   if (loading) {
