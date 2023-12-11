@@ -1,7 +1,7 @@
 'use client'
 
 // src/components/BadgeList.tsx
-import { Badge } from '@/model/badge';
+import { Badge } from '.prisma/client';
 import React, { useState } from 'react';
 
 type BadgeListProps = {

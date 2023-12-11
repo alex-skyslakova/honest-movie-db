@@ -48,8 +48,8 @@ export default async function Image({
                         <p style={{ marginBottom: '20px',  fontSize: 72}}>Movie: {movie.title}</p>
                         <p style={{ marginBottom: '10px',  fontSize: 20}}>Description: {movie.description}</p>
                         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-                            {movie.genre?.length !== 0 ? <p>Genres:</p> : <p>{movie.title} has no genres assigned.</p>}
-                            {movie.genre.map(genre => (
+                            {movie.genres?.length !== 0 ? <p>Genres:</p> : <p>{movie.title} has no genres assigned.</p>}
+                            {movie.genres.map(genre => (
                                 <div key={genre.id} style={{ margin: '10px', textAlign: 'center' }}>
                                     <span>{genre.name}</span>
                                 </div>

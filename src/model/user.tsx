@@ -1,10 +1,13 @@
-import { Badge } from "./badge";
-
 //Represents a user
 //badges: list of badges that will be displayed in user's profile
-//this model will probably contain much more fields (authentication issue)
+import {Badge} from ".prisma/client";
+import {Review} from "@/model/review";
+
 export type User = {
-    id: String;
-    name: String | null;
+    id: string;
+    name: string | null;
+    email: string | null;
+    image: string | null;
     badges: Badge[];
+    reviews: Review[];
 }

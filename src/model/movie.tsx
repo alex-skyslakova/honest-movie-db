@@ -7,11 +7,11 @@ import {Genre, Review} from ".prisma/client";
 export type Movie = {
     id: number;
 	title: string;
-    genre: Genre[];
 	description: string;
     image: string;
     rating: number;
     reviews: Review[];
+    genres: Genre[];
 }
 
 export interface MovieOptions {

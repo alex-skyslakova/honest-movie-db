@@ -1,16 +1,19 @@
 // src/app/profile/pages.tsx
 import React from 'react';
 import BadgeList from '@/components/BadgeList';
-import {User} from '.prisma/client';
+import {User} from "@/model/user";
 import {UserNameField} from "@/components/UserNameField";
 import {getServerAuthSession} from "@/server/auth";
 import {getUserById, updateUser} from "@/api/db/user";
 import {LoginStatus} from "@/app/LoginStatus";
 import Link from "next/link";
 
+type ProfilePageProps = {
+    params: { id: string };
+};
 
-const ProfilePage: React.FC = async ({params}: { params: { id: string } }) => {
-    const {id} = params;
+const ProfilePage = async (props: ProfilePageProps) => {
+    const {id} = props.params;
     const status = await getServerAuthSession();
     if (!status)
         return (
@@ -22,7 +25,7 @@ const ProfilePage: React.FC = async ({params}: { params: { id: string } }) => {
                 <LoginStatus/>
             </div>
         )
-    const user: User = await getUserById(id, {orderBy: {rating: "desc"}, take: 3, include: {movie: true}})
+    const user: User | null= await getUserById(id, {orderBy: {rating: "desc"}, take: 3, include: {movie: true}}) as User;
 
     if (!user) {
         return <div>Loading...</div>;
@@ -33,7 +36,7 @@ const ProfilePage: React.FC = async ({params}: { params: { id: string } }) => {
             {/* Left Side */}
             <div className="flex-1 p-8 flex items-center justify-center">
                 <div className="max-w-md rounded-lg p-4 flex flex-col items-center">
-                    <UserNameField userName={user.name} enabled={status?.user?.id == id} saveFunc={saveUserName(id)}/>
+                    <UserNameField userName={user.name ?? ''} enabled={status?.user?.id == id} saveFunc={saveUserName(id)}/>
                     <p className="text-sm mb-4">{user.email}</p>
                     {
                         user.reviews && user.reviews.length > 0 ?
@@ -41,7 +44,7 @@ const ProfilePage: React.FC = async ({params}: { params: { id: string } }) => {
                                 <h2 className="text-lg font-semibold mb-8 text-center mt-8">Top reviews</h2>
                                 {
                                     (user.reviews).map(review =>
-                                        <Link href={`/movies/${review.movie.id}`}
+                                        <Link href={`/movies/${review.movieId}`}
                                               className="rounded-2xl p-2 bg-orange-100 dark:bg-yellow-900 flex gap-x-2"
                                               key={review.id}>
                                             <img
@@ -69,11 +72,16 @@ const ProfilePage: React.FC = async ({params}: { params: { id: string } }) => {
             {/* Right Side */}
             <div className="flex-1 flex flex-col items-center justify-center">
                 <div className="p-4 rounded-lg">
-                    <img
+                    {user.image ? <img
                         src={user.image}
                         alt="Profile"
                         className="align-middle object-cover rounded border dark:bg-neutral-600 shadow-lg"
+                    /> : <img
+                        src="img/profile/placeholder-profile.png"
+                        alt="Profile"
+                        className="align-middle object-cover rounded border dark:bg-neutral-600 shadow-lg"
                     />
+                    }
                 </div>
                 <BadgeList badges={user.badges}/>
             </div>
