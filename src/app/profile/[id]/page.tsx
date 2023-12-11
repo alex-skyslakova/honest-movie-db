@@ -55,7 +55,7 @@ const ProfilePage: React.FC = async ({params}: { params: { id: string } }) => {
                                                     <p className="ml-auto">{`${review.rating}/100`}</p>
                                                 </div>
                                                 <div className="w-full h-0 border border-white"/>
-                                                <p>{review.content}</p>
+                                                <p>{review.content.slice(0, 50)}...</p>
                                             </div>
                                         </Link>
                                     )
