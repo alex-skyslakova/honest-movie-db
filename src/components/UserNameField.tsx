@@ -31,7 +31,7 @@ export const UserNameField = ({userName, enabled, saveFunc}: { userName: string,
                     { enabled ?
                         <button
                             onClick={() => setIsEditing(true)}
-                            className="ml-2 px-2 py-1 bg-blue-500 text-white rounded"
+                            className="ml-2 px-2 py-1 bg-orange-100 dark:bg-yellow-900 text-white rounded"
                         >
                             Edit
                         </button> :
