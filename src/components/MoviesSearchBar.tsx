@@ -39,13 +39,13 @@ export const MoviesSearchBar = () => {
         )
     const [genres, movieCount] = [resultGenres.data as Genre[], resultCount.data as number]
     return (
-        <div className="flex gap-x-5 rounded-2xl bg-neutral-100 dark:bg-neutral-800 p-5 my-5">
+        <div className="flex flex-wrap justify-center gap-x-5 gap-y-4 rounded-2xl bg-neutral-100 dark:bg-neutral-800 p-5 my-5">
             <input
-                className="grow bg-gray-200 dark:bg-stone-700 text-gray-900 dark:text-gray-100 rounded-xl py-3 px-4 leading-tight focus:outline-none focus:bg-white dark:focus:bg-black"
+                className="grow bg-gray-200 dark:bg-stone-700 text-gray-900 dark:text-gray-100 rounded-xl py-3 px-4 leading-tight focus:outline-none focus:bg-white dark:focus:bg-black h-12"
                 value={options.titlePrefix} placeholder="Search" onChange={event => {
                 setOptions(Object.assign({}, options, {titlePrefix: event.target.value}))
             }}/>
-            <div className="flex flex-col gap-y-1 items-center">
+            <div className="flex flex-col gap-y-1 items-center h-12">
                 <div>
                     {options.minRating == 0 ? "Try the slider" : `Rating at least ${options.minRating}`}
                 </div>
@@ -53,7 +53,7 @@ export const MoviesSearchBar = () => {
                        value={options.minRating}
                        onChange={event => setOptions(Object.assign({}, options, {minRating: +event.target.value}))}/>
             </div>
-            <div className="rounded-xl bg-gray-200 dark:bg-stone-700 flex items-center gap-x-2 px-4">
+            <div className="rounded-xl bg-gray-200 dark:bg-stone-700 flex items-center gap-x-2 px-4 h-12">
                 <label htmlFor="selectGenre">Select genre:</label>
                 <select id="selectGenre" className="bg-gray-200 dark:bg-stone-700" value={options.genreId}
                         onChange={event => {

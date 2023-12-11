@@ -46,7 +46,6 @@ const removeBadgesFromUser = async (userId: string) => {
 const addBadgeToUser = async (userId: string, badgeId: number) => {
     try {
         // Remove existing badges before adding the new one
-        await removeBadgesFromUser(userId);
         if (badgeId != undefined) {
             const response = await fetch(`/api/badge?addUserId=true&userId=${userId}&badgeId=${badgeId}`, {
                 method: 'PUT',
@@ -96,6 +95,7 @@ const updateBadges = async (userId: string) => {
             badges.push(3);
         }
 
+        await removeBadgesFromUser(userId);
         for (const badge of badges) {
             await addBadgeToUser(userId, badge);
         }

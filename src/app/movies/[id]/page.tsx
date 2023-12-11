@@ -143,6 +143,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
   const removeReview = async (reviewId: number) => {
     // Update the reviews state by removing the review with the specified id
     setReviews((prevReviews) => prevReviews.filter((review) => review.id !== reviewId));
+    await updateBadges(loggedUserId);
   };
 
   if (loading) {
@@ -170,7 +171,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
 
             <div className="mt-4 relative">
               <button
-                  className={`dark:bg-stone-500 text-white py-2 text-xl px-4 rounded ${
+                  className={`bg-stone-100 dark:bg-stone-500 dark:text-white py-2 text-xl px-4 rounded ${
                       userHasReviewed || loggedUserId === 'unknown'
                           ? 'opacity-50 cursor-not-allowed'
                           : ''
