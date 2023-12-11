@@ -60,7 +60,7 @@ export const MoviesSearchBar = () => {
                             setOptions(Object.assign({}, options, {genreId: event.target.value != '--All--' ? +event.target.value : undefined}))
                         }}>
                     <option value={undefined}>--All--</option>
-                    {genres.map(genre => (<option value={genre.id}>{genre.name}</option>))}
+                    {genres.map(genre => (<option value={genre.id} key={genre.id}>{genre.name}</option>))}
                 </select>
             </div>
             <div className="hidden md:block"/>

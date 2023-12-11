@@ -17,7 +17,7 @@ const ProfilePage: React.FC = async ({params}: { params: { id: string } }) => {
             <div
                 className="flex flex-col h-4/5 w-4/5 dark:bg-neutral-800 m-auto p-5 items-center justify-center gap-y-4 rounded-xl">
                 <div>
-                    To view profile pages (yours or anyone else's) you need to sign in
+                    To view profile pages (yours or anyone else&apos;s) you need to sign in
                 </div>
                 <LoginStatus/>
             </div>

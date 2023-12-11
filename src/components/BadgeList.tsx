@@ -41,7 +41,7 @@ const BadgeList: React.FC<BadgeListProps> = ({ badges }) => {
             )}
           </div>
         )) :
-            <p>There's nothing here yet</p>
+            <p>There&apos;s nothing here yet</p>
         }
       </div>
     </div>
