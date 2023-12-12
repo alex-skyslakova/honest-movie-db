@@ -20,13 +20,13 @@ export const contentType = 'image/png';
 export default async function Image({
                                         params // read [id] route slug
                                     }: {
-    params: { movieId: string };
+    params: { id: string };
 }) {
     // Fetch data
-    const id = parseInt(params.movieId)
+    const id = parseInt(params.id)
     let movie: Movie | null = null;
     if (!isNaN(id)) {
-        movie = await getMovieById(parseInt(params.movieId)) as any as Movie;
+        movie = await getMovieById(parseInt(params.id)) as any as Movie;
     }
 
     return new ImageResponse(
