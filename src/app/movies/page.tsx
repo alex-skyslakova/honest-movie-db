@@ -4,7 +4,7 @@ import {getMovies as getMoviesFromDb} from "@/api/db/movie";
 import {Metadata} from "next";
 
 export const metadata: Metadata = {
-    title: 'Profile',
+    title: 'Movies',
 }
 
 export default async function Movies() {
