@@ -5,7 +5,7 @@ import {useSession} from "next-auth/react";
 import {getSelectedMovies} from "@/server/movieSelection";
 import SideBarItem from "@/components/SideBarItem";
 import MovieOfThePeriod from "@/components/MovieOfThePeriod";
-import {Movie} from ".prisma/client";
+import {Movie} from "@/model/movie";
 
 type MoviesState = {
     movieOfTheDay: Movie | undefined;
@@ -13,7 +13,8 @@ type MoviesState = {
 }
 
 const SideBar = () => {
-    const userId = useSession()?.data?.user?.id || null;
+    const { data: session } = useSession();
+    const userId = session && session.user && session.user.id ? session.user.id : null;
     const [movies, setMovies] = useState<MoviesState>({
         movieOfTheDay: undefined,
         movieOfTheWeek: undefined,
@@ -22,7 +23,7 @@ const SideBar = () => {
     useEffect(() => {
         async function fetchMovies() {
             const selectedMovies = await getSelectedMovies(userId);
-            setMovies(selectedMovies);
+            setMovies(selectedMovies as MoviesState);
         }
 
         fetchMovies();

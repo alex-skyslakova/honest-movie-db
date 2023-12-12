@@ -1,9 +1,6 @@
 import {ImageResponse} from "next/og";
 import {getUserById} from "@/api/db/user";
 import {User} from "@/model/user";
-import {getMovieById} from "@/api/db/movie";
-import {Movie} from "@/model/movie";
-import {Genre} from "@/model/genre";
 
 
 // Route segment config
@@ -20,15 +17,11 @@ export const contentType = 'image/png';
 export default async function Image({
                                         params // read [id] route slug
                                     }: {
-    params: { movieId: string };
+    params: { userId: string };
 }) {
     // Fetch data
-    const id = parseInt(params.movieId)
-    let movie: Movie | null = null;
-    if (!isNaN(id)) {
-        movie = await getMovieById(parseInt(params.movieId)) as any as Movie;
-    }
-
+    const user = await getUserById(params.userId);
+    const badges = user?.badges;
     return new ImageResponse(
         (
             <div
@@ -44,23 +37,21 @@ export default async function Image({
                     padding: 64
                 }}
             >
-                {movie ? (
+                {user ? (
                     <>
-                        <p style={{ marginBottom: '20px',  fontSize: 72}}>Movie: {movie.title}</p>
-                        <p style={{ marginBottom: '10px',  fontSize: 20}}>Description: {movie.description}</p>
+                        <p style={{ marginBottom: '20px',  fontSize: 72}}>User: {user.name}</p>
                         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-                            {movie.genres?.length !== 0 ? <p>Genres:</p> : <p>{movie.title} has no genres assigned.</p>}
-                            {movie.genres.map(genre => {
-                                return (
-                                    <div key={genre.id} style={{margin: '10px', textAlign: 'center'}}>
-                                        <span>{genre.name}</span>
-                                    </div>
-                                );
-                            })}
+                            {badges?.length !== 0 ? <p>{user.name} has gained following badges by reviewing movies:</p> : <p>{user.name} has not gained any badges yet.</p>}
+                            {user.badges.map(badge => (
+                                <div key={badge.id} style={{ margin: '10px', textAlign: 'center' }}>
+                                    <img src={badge.image} alt={badge.name} style={{ width: '100px', height: '100px', marginBottom: '10px' }} />
+                                    <span>{badge.name}</span>
+                                </div>
+                            ))}
                         </div>
                     </>
                 ) : (
-                    <p>Movie not found</p>
+                    <p>User not found</p>
                 )}
 
             </div>

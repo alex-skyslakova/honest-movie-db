@@ -1,4 +1,4 @@
-export const PageSizeSelector = ({text, value, onChange}: { text: string, value: number, onChange: (event) => void }) => (
+export const PageSizeSelector = ({text, value, onChange}: { text: string, value: number, onChange: (event: any) => void }) => (
     <div className="rounded-xl bg-gray-200 dark:bg-stone-700 flex items-center gap-x-2 px-4">
         <label htmlFor="selectPageSize">{text}</label>
         <select id="selectPageSize" className="bg-gray-200 dark:bg-stone-700 h-12" value={value}

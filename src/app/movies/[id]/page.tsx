@@ -39,7 +39,7 @@ const MoviePage: React.FC<MoviePageParams> = ({ params }) => {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  let loggedUserId = session?.user?.id || '';
+  let loggedUserId = session && session.user && session.user.id ? session.user.id : '';
   const userHasReviewed = reviews.some(
       (review) => review.userId == loggedUserId && review.movieId == params.id
   );

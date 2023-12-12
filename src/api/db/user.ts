@@ -57,7 +57,6 @@ export const GET_USER = async (req: Request) => {
             return Response.json({ error: 'Invalid userId' }, { status: 400 });
         }
     } catch (error) {
-        console.error('Error in GET_USER:', error);
         return Response.json({ error: 'Internal server error' }, { status: 500 });
     }
 };
