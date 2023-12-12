@@ -1,6 +1,11 @@
 import {MoviesListWrapper} from "@/components/MoviesListWrapper";
 import {Movie, MovieOptions} from "@/model/movie";
 import {getMovies as getMoviesFromDb} from "@/api/db/movie";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+    title: 'Profile',
+}
 
 export default async function Movies() {
     return (

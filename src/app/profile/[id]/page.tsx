@@ -7,6 +7,11 @@ import {getServerAuthSession} from "@/server/auth";
 import {getUserById, updateUser} from "@/api/db/user";
 import {LoginStatus} from "@/app/LoginStatus";
 import Link from "next/link";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+    title: 'Profile',
+}
 
 type ProfilePageProps = {
     params: { id: string };
