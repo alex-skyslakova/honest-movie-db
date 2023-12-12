@@ -20,7 +20,7 @@ export default async function Image({
     params: { userId: string };
 }) {
     // Fetch data
-    const user: User | null = await getUserById(params.userId);
+    const user = await getUserById(params.userId);
     const badges = user?.badges;
     return new ImageResponse(
         (

@@ -3,6 +3,7 @@ import {getUserById} from "@/api/db/user";
 import {User} from "@/model/user";
 import {getMovieById} from "@/api/db/movie";
 import {Movie} from "@/model/movie";
+import {Genre} from "@/model/genre";
 
 
 // Route segment config
@@ -49,11 +50,13 @@ export default async function Image({
                         <p style={{ marginBottom: '10px',  fontSize: 20}}>Description: {movie.description}</p>
                         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
                             {movie.genres?.length !== 0 ? <p>Genres:</p> : <p>{movie.title} has no genres assigned.</p>}
-                            {movie.genres.map(genre => (
-                                <div key={genre.id} style={{ margin: '10px', textAlign: 'center' }}>
-                                    <span>{genre.name}</span>
-                                </div>
-                            ))}
+                            {movie.genres.map(genre => {
+                                return (
+                                    <div key={genre.id} style={{margin: '10px', textAlign: 'center'}}>
+                                        <span>{genre.name}</span>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </>
                 ) : (

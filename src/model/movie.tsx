@@ -2,7 +2,9 @@
 //Movies can have multiple genres
 //The image of the movie should have a specific ratio
 //rating is computed every time a new review is created/deleted and represents an average of all ratings
-import {Genre, Review} from ".prisma/client";
+
+import {Genre} from "@/model/genre";
+import {Review} from "@/model/review";
 
 export type Movie = {
     id: number;

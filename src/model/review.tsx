@@ -1,5 +1,6 @@
-import {Movie} from ".prisma/client";
-import {User} from "@prisma/client";
+
+import {Movie} from "@/model/movie";
+import {User} from "@/model/user";
 
 export type Review = {
     id: number;

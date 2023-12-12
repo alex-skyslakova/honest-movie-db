@@ -25,7 +25,7 @@ const ProfilePage = async (props: ProfilePageProps) => {
                 <LoginStatus/>
             </div>
         )
-    const user: User | null= await getUserById(id, {orderBy: {rating: "desc"}, take: 3, include: {movie: true}}) as User;
+    const user = await getUserById(id, {orderBy: {rating: "desc"}, take: 3, include: {movie: true}}) as User;
 
     if (!user) {
         return <div>Loading...</div>;
@@ -48,13 +48,13 @@ const ProfilePage = async (props: ProfilePageProps) => {
                                               className="rounded-2xl p-2 bg-orange-100 dark:bg-yellow-900 flex gap-x-2"
                                               key={review.id}>
                                             <img
-                                                src={review.movie.image}
-                                                alt={review.movie.title}
+                                                src={review.movie?.image}
+                                                alt={review.movie?.title}
                                                 className="align-middle rounded w-1/4"
                                             />
                                             <div className="flex flex-col grow">
                                                 <div className="flex gap-x-1">
-                                                    <p className="grow">{review.movie.title}</p>
+                                                    <p className="grow">{review.movie?.title}</p>
                                                     <p className="ml-auto">{`${review.rating}/100`}</p>
                                                 </div>
                                                 <div className="w-full h-0 border border-white"/>
