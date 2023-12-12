@@ -34,7 +34,7 @@ export default async function Image() {
             >
                 <p style={{ marginBottom: '20px', fontSize: 72 }}>Honest Movie DB</p>
                 <p>Discover and Rate Your Favorite Movies</p>
-                <img src="/img/background.png" alt="Movie Icon" style={{ marginTop: '20px', width: '100px', height: '100px' }}/>
+                {/*<img src="https://honest-movie-db-pv247.vercel.app/img/background.png" alt="Movie Icon" style={{ marginTop: '20px', width: '100px', height: '100px' }}/>*/}
             </div>
         ),
         {
