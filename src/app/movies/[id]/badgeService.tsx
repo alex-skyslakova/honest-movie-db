@@ -79,7 +79,7 @@ const updateBadges = async (userId: string) => {
             badges.push(5);
         }
 
-        if (averageRating < 20) {
+        if (averageRating < 20 && reviews.length !== 0) {
             badges.push(4);
         }
 
