@@ -19,6 +19,10 @@ and what movies they like the most.
 * Kristián Malák
 * Lukáš Majdan
 
+### website url
+
+https://honest-movie-db-pv247.vercel.app/
+
 # Project setup
 
 * ```git clone``` or download the project
